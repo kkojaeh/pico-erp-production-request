@@ -2,9 +2,6 @@ banner:
   location: classpath:production-request/banner.txt
 
 spring:
-  profiles:
-    include:
-      - data
   application:
     name: pico-production-request
   session:
