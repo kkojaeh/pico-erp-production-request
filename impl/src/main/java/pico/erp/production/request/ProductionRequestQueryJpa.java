@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import pico.erp.production.request.ProductionRequestAwaitAcceptView.Filter;
 import pico.erp.shared.Public;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
 
@@ -41,6 +42,8 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
       productionRequest.itemId,
       productionRequest.code,
       productionRequest.dueDate,
+      productionRequest.quantity,
+      productionRequest.spareQuantity,
       productionRequest.asap,
       productionRequest.projectId,
       productionRequest.status,
@@ -76,6 +79,52 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
 
     if (filter.getStatuses() != null && !filter.getStatuses().isEmpty()) {
       builder.and(productionRequest.status.in(filter.getStatuses()));
+    }
+
+    if (filter.getItemId() != null) {
+      builder.and(productionRequest.itemId.eq(filter.getItemId()));
+    }
+
+    query.where(builder);
+    return queryDslJpaSupport.paging(query, pageable, select);
+  }
+
+  @Override
+  public Page<ProductionRequestAwaitAcceptView> retrieve(Filter filter, Pageable pageable) {
+    val query = new JPAQuery<ProductionRequestAwaitAcceptView>(entityManager);
+    val select = Projections.bean(ProductionRequestAwaitAcceptView.class,
+      productionRequest.id,
+      productionRequest.itemId,
+      productionRequest.code,
+      productionRequest.dueDate,
+      productionRequest.quantity,
+      productionRequest.spareQuantity,
+      productionRequest.asap,
+      productionRequest.projectId,
+      productionRequest.committerId,
+      productionRequest.committedDate
+    );
+    query.select(select);
+    query.from(productionRequest);
+
+    val builder = new BooleanBuilder();
+
+    builder.and(productionRequest.status.eq(ProductionRequestStatusKind.COMMITTED));
+
+    if (!isEmpty(filter.getCode())) {
+      builder.and(productionRequest.code.value
+        .likeIgnoreCase(queryDslJpaSupport.toLikeKeyword("%", filter.getCode(), "%")));
+    }
+
+    if (filter.getProjectId() != null) {
+      builder.and(productionRequest.projectId.eq(filter.getProjectId()));
+    }
+
+    if (filter.getStartDueDate() != null) {
+      builder.and(productionRequest.dueDate.goe(filter.getStartDueDate()));
+    }
+    if (filter.getEndDueDate() != null) {
+      builder.and(productionRequest.dueDate.loe(filter.getEndDueDate()));
     }
 
     if (filter.getItemId() != null) {
