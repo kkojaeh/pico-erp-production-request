@@ -37,6 +37,10 @@ public interface ProductionRequestRequests {
     @Min(0)
     BigDecimal quantity;
 
+    @NotNull
+    @Min(0)
+    BigDecimal spareQuantity;
+
     @Future
     @NotNull
     OffsetDateTime dueDate;
@@ -62,9 +66,17 @@ public interface ProductionRequestRequests {
     @NotNull
     ProductionRequestId id;
 
+    @Valid
+    @NotNull
+    ItemId itemId;
+
     @NotNull
     @Min(0)
     BigDecimal quantity;
+
+    @NotNull
+    @Min(0)
+    BigDecimal spareQuantity;
 
     @Future
     @NotNull

@@ -135,6 +135,9 @@ public abstract class ProductionRequestMapper {
   @Mappings({
     @Mapping(target = "itemId", source = "item.id"),
     @Mapping(target = "planId", source = "plan.id"),
+    @Mapping(target = "committerId", source = "committer.id"),
+    @Mapping(target = "cancelerId", source = "canceler.id"),
+    @Mapping(target = "accepterId", source = "accepter.id"),
     @Mapping(target = "orderAcceptanceId", source = "orderAcceptance.id"),
     @Mapping(target = "projectId", source = "project.id")
   })
@@ -215,6 +218,7 @@ public abstract class ProductionRequestMapper {
     ProductionRequestRequests.CreateRequest request);
 
   @Mappings({
+    @Mapping(target = "item", source = "itemId"),
     @Mapping(target = "project", source = "projectId")
   })
   public abstract ProductionRequestMessages.Update.Request map(

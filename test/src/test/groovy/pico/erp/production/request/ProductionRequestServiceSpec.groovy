@@ -49,6 +49,7 @@ class ProductionRequestServiceSpec extends Specification {
         itemId: itemId,
         asap: true,
         quantity: 100,
+        spareQuantity: 10,
         dueDate: dueDate,
         projectId: projectId
       )
@@ -59,8 +60,10 @@ class ProductionRequestServiceSpec extends Specification {
     requestService.update(
       new ProductionRequestRequests.UpdateRequest(
         id: requestId,
+        itemId: itemId,
         asap: false,
         quantity: 100,
+        spareQuantity: 5,
         dueDate: dueDate,
         projectId: projectId
       )
@@ -134,6 +137,7 @@ class ProductionRequestServiceSpec extends Specification {
     then:
     request.itemId == itemId
     request.quantity == 100
+    request.spareQuantity == 10
     request.dueDate == dueDate
     request.asap == true
     request.projectId == projectId
@@ -196,6 +200,7 @@ class ProductionRequestServiceSpec extends Specification {
     then:
     request.itemId == itemId
     request.quantity == 100
+    request.spareQuantity == 5
     request.dueDate == dueDate
     request.asap == false
     request.projectId == projectId
