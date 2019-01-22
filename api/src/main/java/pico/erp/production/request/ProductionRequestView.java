@@ -61,6 +61,8 @@ public class ProductionRequestView {
 
     ProjectId projectId;
 
+    UserId requesterId;
+
     ItemId itemId;
 
     Set<ProductionRequestStatusKind> statuses;
