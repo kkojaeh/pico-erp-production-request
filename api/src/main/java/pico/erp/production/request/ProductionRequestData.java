@@ -46,4 +46,18 @@ public class ProductionRequestData {
 
   OffsetDateTime acceptedDate;
 
+  boolean committable;
+
+  boolean cancelable;
+
+  boolean acceptable;
+
+  boolean completable;
+
+  boolean progressable;
+
+  boolean updatable;
+
+  boolean plannable;
+
 }

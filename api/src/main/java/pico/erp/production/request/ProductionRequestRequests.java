@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import pico.erp.item.ItemId;
 import pico.erp.order.acceptance.OrderAcceptanceId;
+import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
 import pico.erp.user.UserId;
 
@@ -134,6 +135,22 @@ public interface ProductionRequestRequests {
     @Valid
     @NotNull
     UserId cancelerId;
+
+  }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  class PlanRequest {
+
+    @Valid
+    @NotNull
+    ProductionRequestId id;
+
+    @Valid
+    @NotNull
+    ProductionPlanId planId;
 
   }
 

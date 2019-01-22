@@ -27,6 +27,11 @@ public enum ProductionRequestStatusKind implements LocalizedNameable {
   ACCEPTED,
 
   /**
+   * 계획중
+   */
+  IN_PLANNING,
+
+  /**
    * 진행중
    */
   IN_PROGRESS,
@@ -52,12 +57,16 @@ public enum ProductionRequestStatusKind implements LocalizedNameable {
     return this == IN_PROGRESS;
   }
 
-  public boolean isProgressable() {
+  public boolean isPlannable() {
     return this == ACCEPTED;
   }
 
   public boolean isUpdatable() {
     return this == CREATED;
+  }
+
+  public boolean isProgressable() {
+    return this == IN_PLANNING;
   }
 
 }

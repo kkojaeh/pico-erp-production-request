@@ -24,6 +24,8 @@ public interface ProductionRequestService {
 
   void complete(@Valid @NotNull ProductionRequestRequests.CompleteRequest request);
 
+  void plan(@Valid @NotNull ProductionRequestRequests.PlanRequest request);
+
 
 
 }

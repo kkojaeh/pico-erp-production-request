@@ -209,6 +209,12 @@ public abstract class ProductionRequestMapper {
     ProductionRequestRequests.CompleteRequest request);
 
   @Mappings({
+    @Mapping(target = "plan", source = "planId")
+  })
+  public abstract ProductionRequestMessages.Plan.Request map(
+    ProductionRequestRequests.PlanRequest request);
+
+  @Mappings({
     @Mapping(target = "item", source = "itemId"),
     @Mapping(target = "project", source = "projectId"),
     @Mapping(target = "orderAcceptance", source = "orderAcceptanceId"),

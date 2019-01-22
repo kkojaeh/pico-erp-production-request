@@ -172,6 +172,18 @@ public class ProductionRequest implements Serializable {
     );
   }
 
+  public ProductionRequestMessages.Plan.Response apply(
+    ProductionRequestMessages.Plan.Request request) {
+    if (!isPlannable()) {
+      throw new ProductionRequestExceptions.CannotPlanException();
+    }
+    plan = request.getPlan();
+    status = ProductionRequestStatusKind.IN_PLANNING;
+    return new ProductionRequestMessages.Plan.Response(
+      Arrays.asList(new ProductionRequestEvents.PlannedEvent(this.id))
+    );
+  }
+
   public ProductionRequestMessages.Cancel.Response apply(
     ProductionRequestMessages.Cancel.Request request) {
     if (!isCancelable()) {
@@ -207,6 +219,10 @@ public class ProductionRequest implements Serializable {
 
   public boolean isUpdatable() {
     return status.isUpdatable();
+  }
+
+  public boolean isPlannable() {
+    return status.isPlannable();
   }
 
 

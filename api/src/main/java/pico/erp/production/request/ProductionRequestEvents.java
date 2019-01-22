@@ -129,4 +129,19 @@ public interface ProductionRequestEvents {
     }
 
   }
+
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
+  class PlannedEvent implements Event {
+
+    public final static String CHANNEL = "event.production-request.planned";
+
+    private ProductionRequestId productionRequestId;
+
+    public String channel() {
+      return CHANNEL;
+    }
+
+  }
 }

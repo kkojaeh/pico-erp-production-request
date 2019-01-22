@@ -13,6 +13,7 @@ import lombok.Value;
 import pico.erp.bom.BomData;
 import pico.erp.item.ItemData;
 import pico.erp.order.acceptance.OrderAcceptanceData;
+import pico.erp.production.plan.ProductionPlanData;
 import pico.erp.project.ProjectData;
 import pico.erp.shared.event.Event;
 import pico.erp.user.UserData;
@@ -112,6 +113,27 @@ public interface ProductionRequestMessages {
       @Max(1)
       @NotNull
       BigDecimal progressRate;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+
+  }
+
+
+  interface Plan {
+
+    @Data
+    class Request {
+
+      @Valid
+      @NotNull
+      ProductionPlanData plan;
 
     }
 

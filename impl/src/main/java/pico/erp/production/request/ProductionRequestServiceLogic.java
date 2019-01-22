@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import pico.erp.audit.AuditService;
 import pico.erp.production.request.ProductionRequestRequests.CancelRequest;
 import pico.erp.production.request.ProductionRequestRequests.CompleteRequest;
+import pico.erp.production.request.ProductionRequestRequests.PlanRequest;
 import pico.erp.production.request.ProductionRequestRequests.ProgressRequest;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
@@ -110,6 +111,16 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
 
   @Override
   public void complete(CompleteRequest request) {
+    val productionRequest = productionRequestRepository.findBy(request.getId())
+      .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
+    val response = productionRequest.apply(mapper.map(request));
+    productionRequestRepository.update(productionRequest);
+    auditService.commit(productionRequest);
+    eventPublisher.publishEvents(response.getEvents());
+  }
+
+  @Override
+  public void plan(PlanRequest request) {
     val productionRequest = productionRequestRepository.findBy(request.getId())
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));

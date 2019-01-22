@@ -31,8 +31,8 @@ public class ProductionRequestRepositoryJpa implements ProductionRequestReposito
 
 
   @Override
-  public ProductionRequest create(ProductionRequest orderAcceptance) {
-    val entity = mapper.jpa(orderAcceptance);
+  public ProductionRequest create(ProductionRequest productionRequest) {
+    val entity = mapper.jpa(productionRequest);
     val created = repository.save(entity);
     return mapper.jpa(created);
   }
@@ -54,9 +54,9 @@ public class ProductionRequestRepositoryJpa implements ProductionRequestReposito
   }
 
   @Override
-  public void update(ProductionRequest orderAcceptance) {
-    val entity = repository.findOne(orderAcceptance.getId());
-    mapper.pass(mapper.jpa(orderAcceptance), entity);
+  public void update(ProductionRequest productionRequest) {
+    val entity = repository.findOne(productionRequest.getId());
+    mapper.pass(mapper.jpa(productionRequest), entity);
     repository.save(entity);
   }
 

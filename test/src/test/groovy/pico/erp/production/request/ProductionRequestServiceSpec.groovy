@@ -26,7 +26,7 @@ class ProductionRequestServiceSpec extends Specification {
   @Autowired
   ProductionRequestService requestService
 
-  def requestId = ProductionRequestId.from("request-1")
+  def id = ProductionRequestId.from("request-1")
 
   def unknownRequestId = ProductionRequestId.from("unknown")
 
@@ -45,7 +45,7 @@ class ProductionRequestServiceSpec extends Specification {
   def setup() {
     requestService.create(
       new ProductionRequestRequests.CreateRequest(
-        id: requestId,
+        id: id,
         itemId: itemId,
         asap: true,
         quantity: 100,
@@ -59,7 +59,7 @@ class ProductionRequestServiceSpec extends Specification {
   def updateRequest() {
     requestService.update(
       new ProductionRequestRequests.UpdateRequest(
-        id: requestId,
+        id: id,
         itemId: itemId,
         asap: false,
         quantity: 100,
@@ -73,7 +73,7 @@ class ProductionRequestServiceSpec extends Specification {
   def commitRequest() {
     requestService.commit(
       new ProductionRequestRequests.CommitRequest(
-        id: requestId,
+        id: id,
         committerId: committerId
       )
     )
@@ -82,7 +82,7 @@ class ProductionRequestServiceSpec extends Specification {
   def completeRequest() {
     requestService.complete(
       new ProductionRequestRequests.CompleteRequest(
-        id: requestId
+        id: id
       )
     )
   }
@@ -90,7 +90,7 @@ class ProductionRequestServiceSpec extends Specification {
   def cancelRequest() {
     requestService.cancel(
       new ProductionRequestRequests.CancelRequest(
-        id: requestId,
+        id: id,
         cancelerId: cancelerId
       )
     )
@@ -99,7 +99,7 @@ class ProductionRequestServiceSpec extends Specification {
   def acceptRequest() {
     requestService.accept(
       new ProductionRequestRequests.AcceptRequest(
-        id: requestId,
+        id: id,
         accepterId: accepterId
       )
     )
@@ -108,15 +108,19 @@ class ProductionRequestServiceSpec extends Specification {
   def progressRequest(rate) {
     requestService.progress(
       new ProductionRequestRequests.ProgressRequest(
-        id: requestId,
+        id: id,
         progressRate: rate
       )
     )
   }
 
+  def get() {
+    requestService.get(id)
+  }
+
   def "존재 - 아이디로 존재 확인"() {
     when:
-    def exists = requestService.exists(requestId)
+    def exists = requestService.exists(id)
 
     then:
     exists == true
@@ -132,7 +136,7 @@ class ProductionRequestServiceSpec extends Specification {
 
   def "조회 - 아이디로 조회"() {
     when:
-    def request = requestService.get(requestId)
+    def request = get()
 
     then:
     request.itemId == itemId
@@ -184,6 +188,7 @@ class ProductionRequestServiceSpec extends Specification {
     when:
     commitRequest()
     acceptRequest()
+
     progressRequest(0.5)
     completeRequest()
     updateRequest()
@@ -195,7 +200,7 @@ class ProductionRequestServiceSpec extends Specification {
   def "수정 - 생성 후 수정"() {
     when:
     updateRequest()
-    def request = requestService.get(requestId)
+    def request = get()
 
     then:
     request.itemId == itemId
@@ -277,6 +282,48 @@ class ProductionRequestServiceSpec extends Specification {
 
     then:
     thrown(ProductionRequestExceptions.CannotCancelException)
+  }
+
+  def "접수 - 제출 후 접수"() {
+    when:
+    commitRequest()
+    acceptRequest()
+    def request = get()
+
+    then:
+    request.planId != null
+  }
+
+  def "접수 - 취소 후 접수"() {
+    when:
+    cancelRequest()
+    acceptRequest()
+
+    then:
+    thrown(ProductionRequestExceptions.CannotAcceptException)
+  }
+
+  def "접수 - 진행 중 접수"() {
+    when:
+    commitRequest()
+    acceptRequest()
+    progressRequest(0.1)
+    acceptRequest()
+
+    then:
+    thrown(ProductionRequestExceptions.CannotAcceptException)
+  }
+
+  def "접수 - 완료 후 접수"() {
+    when:
+    commitRequest()
+    acceptRequest()
+    progressRequest(0.5)
+    completeRequest()
+    acceptRequest()
+
+    then:
+    thrown(ProductionRequestExceptions.CannotAcceptException)
   }
 
 }
