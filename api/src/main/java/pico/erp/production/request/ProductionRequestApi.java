@@ -14,7 +14,8 @@ public final class ProductionRequestApi {
   public enum Roles implements Role {
 
     PRODUCTION_REQUEST_MANAGER,
-    PRODUCTION_REQUESTER;
+    PRODUCTION_REQUESTER,
+    PRODUCTION_REQUEST_ACCEPTER;
 
     @Id
     @Getter

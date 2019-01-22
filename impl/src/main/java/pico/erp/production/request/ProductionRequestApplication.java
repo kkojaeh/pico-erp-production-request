@@ -95,6 +95,12 @@ public class ProductionRequestApplication implements ApplicationStarter {
     return Roles.PRODUCTION_REQUESTER;
   }
 
+  @Bean
+  @Public
+  public Role productionRequestAccepterRole() {
+    return Roles.PRODUCTION_REQUEST_ACCEPTER;
+  }
+
   @Override
   public pico.erp.shared.Application start(String... args) {
     return new ApplicationImpl(application().run(args));
