@@ -85,3 +85,8 @@ logging:
 
 flyway:
   enabled: false
+
+production-request:
+  accepter-group:
+    id: prdr-accepter
+    name: 생산요청 접수자

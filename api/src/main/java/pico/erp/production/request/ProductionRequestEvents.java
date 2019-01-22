@@ -71,6 +71,21 @@ public interface ProductionRequestEvents {
   @Data
   @AllArgsConstructor
   @NoArgsConstructor
+  class AcceptedEvent implements Event {
+
+    public final static String CHANNEL = "event.production-request.accepted";
+
+    private ProductionRequestId productionRequestId;
+
+    public String channel() {
+      return CHANNEL;
+    }
+
+  }
+
+  @Data
+  @AllArgsConstructor
+  @NoArgsConstructor
   class CanceledEvent implements Event {
 
     public final static String CHANNEL = "event.production-request.canceled";

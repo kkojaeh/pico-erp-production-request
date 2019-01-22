@@ -12,7 +12,7 @@ public interface ProductionRequestService {
 
   ProductionRequestData create(@Valid @NotNull ProductionRequestRequests.CreateRequest request);
 
-  void delete(@Valid @NotNull ProductionRequestRequests.DeleteRequest request);
+  void accept(@Valid @NotNull ProductionRequestRequests.AcceptRequest request);
 
   boolean exists(@Valid @NotNull ProductionRequestId id);
 

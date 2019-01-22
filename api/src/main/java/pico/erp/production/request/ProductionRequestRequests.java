@@ -7,19 +7,14 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.project.ProjectId;
-import pico.erp.shared.TypeDefinitions;
-import pico.erp.shared.data.Address;
 import pico.erp.user.UserId;
 
 public interface ProductionRequestRequests {
@@ -49,26 +44,7 @@ public interface ProductionRequestRequests {
     boolean asap;
 
     @NotNull
-    CompanyId customerId;
-
-    @NotNull
-    CompanyId purchaserId;
-
-    @NotNull
-    CompanyId receiverId;
-
-    @NotNull
     ProjectId projectId;
-
-    @Valid
-    @NotNull
-    Address deliveryAddress;
-
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryTelephoneNumber;
-
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryMobilePhoneNumber;
 
     @Valid
     OrderAcceptanceId orderAcceptanceId;
@@ -97,26 +73,7 @@ public interface ProductionRequestRequests {
     boolean asap;
 
     @NotNull
-    CompanyId customerId;
-
-    @NotNull
-    CompanyId purchaserId;
-
-    @NotNull
-    CompanyId receiverId;
-
-    @NotNull
     ProjectId projectId;
-
-    @Valid
-    @NotNull
-    Address deliveryAddress;
-
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryTelephoneNumber;
-
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryMobilePhoneNumber;
 
   }
 
@@ -124,11 +81,15 @@ public interface ProductionRequestRequests {
   @NoArgsConstructor
   @AllArgsConstructor
   @Builder
-  class DeleteRequest {
+  class AcceptRequest {
 
     @Valid
     @NotNull
     ProductionRequestId id;
+
+    @Valid
+    @NotNull
+    UserId accepterId;
 
   }
 
@@ -142,6 +103,10 @@ public interface ProductionRequestRequests {
     @NotNull
     ProductionRequestId id;
 
+    @Valid
+    @NotNull
+    UserId committerId;
+
   }
 
   @Data
@@ -153,6 +118,10 @@ public interface ProductionRequestRequests {
     @Valid
     @NotNull
     ProductionRequestId id;
+
+    @Valid
+    @NotNull
+    UserId cancelerId;
 
   }
 

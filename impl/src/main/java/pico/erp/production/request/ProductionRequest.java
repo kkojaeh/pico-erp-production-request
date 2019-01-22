@@ -15,17 +15,13 @@ import lombok.experimental.FieldDefaults;
 import lombok.val;
 import pico.erp.audit.annotation.Audit;
 import pico.erp.bom.BomStatusKind;
-import pico.erp.company.CompanyData;
 import pico.erp.item.ItemData;
 import pico.erp.item.ItemStatusKind;
 import pico.erp.order.acceptance.OrderAcceptanceData;
-import pico.erp.process.ProcessStatusKind;
 import pico.erp.production.plan.ProductionPlanData;
-import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.request.ProductionRequestExceptions.CannotUpdateException;
 import pico.erp.project.ProjectData;
-import pico.erp.shared.data.Address;
-import pico.erp.shared.data.Auditor;
+import pico.erp.user.UserData;
 
 /**
  * 주문 접수
@@ -50,15 +46,11 @@ public class ProductionRequest implements Serializable {
 
   BigDecimal quantity;
 
+  BigDecimal spareQuantity;
+
   OffsetDateTime dueDate;
 
   boolean asap;
-
-  CompanyData customer;
-
-  CompanyData purchaser;
-
-  CompanyData receiver;
 
   ProjectData project;
 
@@ -66,21 +58,19 @@ public class ProductionRequest implements Serializable {
 
   OrderAcceptanceData orderAcceptance;
 
-  Address deliveryAddress;
-
-  String deliveryTelephoneNumber;
-
-  String deliveryMobilePhoneNumber;
-
   ProductionRequestStatusKind status;
 
-  Auditor committedBy;
+  UserData committer;
 
   OffsetDateTime committedDate;
 
-  Auditor canceledBy;
+  UserData canceler;
 
   OffsetDateTime canceledDate;
+
+  UserData accepter;
+
+  OffsetDateTime acceptedDate;
 
   OffsetDateTime completedDate;
 
@@ -90,105 +80,108 @@ public class ProductionRequest implements Serializable {
 
   }
 
-  public ProductionRequestMessages.CreateResponse apply(
-    ProductionRequestMessages.CreateRequest request) {
+  public ProductionRequestMessages.Create.Response apply(
+    ProductionRequestMessages.Create.Request request) {
     this.id = request.getId();
     this.item = request.getItem();
     this.quantity = request.getQuantity();
+    this.spareQuantity = request.getSpareQuantity();
     this.dueDate = request.getDueDate();
     this.asap = request.isAsap();
-    this.customer = request.getCustomer();
-    this.receiver = request.getReceiver();
-    this.purchaser = request.getPurchaser();
     this.project = request.getProject();
     this.status = ProductionRequestStatusKind.CREATED;
-    this.deliveryAddress = request.getDeliveryAddress();
-    this.deliveryMobilePhoneNumber = request.getDeliveryMobilePhoneNumber();
-    this.deliveryTelephoneNumber = request.getDeliveryTelephoneNumber();
     this.orderAcceptance = request.getOrderAcceptance();
     this.progressRate = BigDecimal.ZERO;
     this.code = request.getCodeGenerator().generate(this);
 
-    return new ProductionRequestMessages.CreateResponse(
+    return new ProductionRequestMessages.Create.Response(
       Arrays.asList(new ProductionRequestEvents.CreatedEvent(this.id))
     );
   }
 
-  public ProductionRequestMessages.UpdateResponse apply(
-    ProductionRequestMessages.UpdateRequest request) {
-    if (!isModifiable()) {
+  public ProductionRequestMessages.Update.Response apply(
+    ProductionRequestMessages.Update.Request request) {
+    if (!isUpdatable()) {
       throw new CannotUpdateException();
     }
+    this.item = request.getItem();
     this.quantity = request.getQuantity();
+    this.spareQuantity = request.getSpareQuantity();
     this.dueDate = request.getDueDate();
     this.asap = request.isAsap();
-    this.customer = request.getCustomer();
-    this.purchaser = request.getPurchaser();
-    this.receiver = request.getReceiver();
     this.project = request.getProject();
-    this.deliveryAddress = request.getDeliveryAddress();
-    this.deliveryMobilePhoneNumber = request.getDeliveryMobilePhoneNumber();
-    this.deliveryTelephoneNumber = request.getDeliveryTelephoneNumber();
 
-    return new ProductionRequestMessages.UpdateResponse(
+    return new ProductionRequestMessages.Update.Response(
       Arrays.asList(new ProductionRequestEvents.UpdatedEvent(this.id))
     );
   }
 
-  public ProductionRequestMessages.DeleteResponse apply(
-    ProductionRequestMessages.DeleteRequest request) {
-    return new ProductionRequestMessages.DeleteResponse(
-      Arrays.asList(new ProductionRequestEvents.DeletedEvent(this.id))
-    );
-  }
-
-  public ProductionRequestMessages.ProgressResponse apply(
-    ProductionRequestMessages.ProgressRequest request) {
+  public ProductionRequestMessages.Progress.Response apply(
+    ProductionRequestMessages.Progress.Request request) {
+    if (!isProgressable()) {
+      throw new ProductionRequestExceptions.CannotProgressException();
+    }
     this.status = ProductionRequestStatusKind.IN_PROGRESS;
     this.progressRate = request.getProgressRate();
-    return new ProductionRequestMessages.ProgressResponse(
+    return new ProductionRequestMessages.Progress.Response(
       Arrays.asList(new ProductionRequestEvents.ProgressedEvent(this.id, this.progressRate))
     );
   }
 
-  public ProductionRequestMessages.CompleteResponse apply(
-    ProductionRequestMessages.CompleteRequest request) {
+  public ProductionRequestMessages.Complete.Response apply(
+    ProductionRequestMessages.Complete.Request request) {
+    if (!isCompletable()) {
+      throw new ProductionRequestExceptions.CannotCompleteException();
+    }
     this.status = ProductionRequestStatusKind.COMPLETED;
     this.completedDate = OffsetDateTime.now();
-    return new ProductionRequestMessages.CompleteResponse(
+    return new ProductionRequestMessages.Complete.Response(
       Arrays.asList(new ProductionRequestEvents.CompletedEvent(this.id))
     );
   }
 
-  public ProductionRequestMessages.CommitResponse apply(
-    ProductionRequestMessages.CommitRequest request) {
-    val bom = request.getBom();
+  public ProductionRequestMessages.Commit.Response apply(
+    ProductionRequestMessages.Commit.Request request) {
     if (!isCommittable()) {
       throw new ProductionRequestExceptions.CannotCommitException();
     }
-    if(item.getStatus() != ItemStatusKind.ACTIVATED){
-      throw new ProductionRequestExceptions.CannotCommitItemDeactivatedException();
-    }
-    if (bom.getStatus() != BomStatusKind.DETERMINED) {
-      throw new ProductionRequestExceptions.CannotCommitBomNotDeterminedException();
-    }
     status = ProductionRequestStatusKind.COMMITTED;
-    committedBy = request.getCommittedBy();
+    committer = request.getCommitter();
     committedDate = OffsetDateTime.now();
-    return new ProductionRequestMessages.CommitResponse(
+    return new ProductionRequestMessages.Commit.Response(
       Arrays.asList(new ProductionRequestEvents.CommittedEvent(this.id))
     );
   }
 
-  public ProductionRequestMessages.CancelResponse apply(
-    ProductionRequestMessages.CancelRequest request) {
+  public ProductionRequestMessages.Accept.Response apply(
+    ProductionRequestMessages.Accept.Request request) {
+    if (!isAcceptable()) {
+      throw new ProductionRequestExceptions.CannotAcceptException();
+    }
+    val bom = request.getBom();
+    if (item.getStatus() != ItemStatusKind.ACTIVATED) {
+      throw new ProductionRequestExceptions.CannotAcceptItemDeactivatedException();
+    }
+    if (bom.getStatus() != BomStatusKind.DETERMINED) {
+      throw new ProductionRequestExceptions.CannotAcceptBomNotDeterminedException();
+    }
+    status = ProductionRequestStatusKind.ACCEPTED;
+    accepter = request.getAccepter();
+    acceptedDate = OffsetDateTime.now();
+    return new ProductionRequestMessages.Accept.Response(
+      Arrays.asList(new ProductionRequestEvents.AcceptedEvent(this.id))
+    );
+  }
+
+  public ProductionRequestMessages.Cancel.Response apply(
+    ProductionRequestMessages.Cancel.Request request) {
     if (!isCancelable()) {
       throw new ProductionRequestExceptions.CannotCancelException();
     }
     status = ProductionRequestStatusKind.CANCELED;
-    canceledBy = request.getCanceledBy();
+    canceler = request.getCanceler();
     canceledDate = OffsetDateTime.now();
-    return new ProductionRequestMessages.CancelResponse(
+    return new ProductionRequestMessages.Cancel.Response(
       Arrays.asList(new ProductionRequestEvents.CanceledEvent(this.id))
     );
   }
@@ -201,7 +194,19 @@ public class ProductionRequest implements Serializable {
     return status.isCancelable();
   }
 
-  public boolean isModifiable() {
+  public boolean isAcceptable() {
+    return status.isAcceptable();
+  }
+
+  public boolean isCompletable() {
+    return status.isCompletable();
+  }
+
+  public boolean isProgressable() {
+    return status.isProgressable();
+  }
+
+  public boolean isUpdatable() {
     return status.isUpdatable();
   }
 

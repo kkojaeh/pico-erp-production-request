@@ -23,20 +23,38 @@ public interface ProductionRequestExceptions {
     private static final long serialVersionUID = 1L;
   }
 
-  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.commit.bom.not.determined.exception")
-  class CannotCommitBomNotDeterminedException extends RuntimeException {
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.commit.exception")
+  class CannotAcceptException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
   }
 
-  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.commit.item.deactivated.exception")
-  class CannotCommitItemDeactivatedException extends RuntimeException {
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.accept.bom.not.determined.exception")
+  class CannotAcceptBomNotDeterminedException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+  }
+
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.accept.item.deactivated.exception")
+  class CannotAcceptItemDeactivatedException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
   }
 
   @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.cancel.exception")
   class CannotCancelException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+  }
+
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.complete.exception")
+  class CannotCompleteException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+  }
+
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.progress.exception")
+  class CannotProgressException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
   }

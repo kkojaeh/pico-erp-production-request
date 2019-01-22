@@ -8,197 +8,196 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.Value;
 import pico.erp.bom.BomData;
-import pico.erp.company.CompanyData;
 import pico.erp.item.ItemData;
 import pico.erp.order.acceptance.OrderAcceptanceData;
-import pico.erp.process.ProcessData;
 import pico.erp.project.ProjectData;
-import pico.erp.shared.TypeDefinitions;
-import pico.erp.shared.data.Address;
-import pico.erp.shared.data.Auditor;
 import pico.erp.shared.event.Event;
+import pico.erp.user.UserData;
 
 public interface ProductionRequestMessages {
 
-  @Data
-  class CreateRequest {
+  interface Create {
 
-    @Valid
-    @NotNull
-    ProductionRequestId id;
+    @Data
+    class Request {
 
-    @Valid
-    @NotNull
-    ItemData item;
+      @Valid
+      @NotNull
+      ProductionRequestId id;
 
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
+      @Valid
+      @NotNull
+      ItemData item;
 
-    @Future
-    @NotNull
-    OffsetDateTime dueDate;
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
 
-    boolean asap;
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
 
-    @NotNull
-    CompanyData customer;
+      @Future
+      @NotNull
+      OffsetDateTime dueDate;
 
-    @NotNull
-    CompanyData purchaser;
+      boolean asap;
 
-    @NotNull
-    CompanyData receiver;
+      @NotNull
+      ProjectData project;
 
-    @NotNull
-    ProjectData project;
+      @NotNull
+      ProductionRequestCodeGenerator codeGenerator;
 
-    @Valid
-    @NotNull
-    Address deliveryAddress;
+      @Valid
+      OrderAcceptanceData orderAcceptance;
 
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryTelephoneNumber;
+    }
 
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryMobilePhoneNumber;
+    @Value
+    class Response {
 
-    @NotNull
-    ProductionRequestCodeGenerator codeGenerator;
+      Collection<Event> events;
 
-    @Valid
-    OrderAcceptanceData orderAcceptance;
+    }
 
   }
 
-  @Data
-  class UpdateRequest {
+  interface Update {
 
-    @NotNull
-    @Min(0)
-    BigDecimal quantity;
+    @Data
+    class Request {
 
-    @Future
-    @NotNull
-    OffsetDateTime dueDate;
+      @Valid
+      @NotNull
+      ItemData item;
 
-    boolean asap;
+      @NotNull
+      @Min(0)
+      BigDecimal quantity;
 
-    @NotNull
-    CompanyData customer;
+      @NotNull
+      @Min(0)
+      BigDecimal spareQuantity;
 
-    @NotNull
-    CompanyData purchaser;
+      @Future
+      @NotNull
+      OffsetDateTime dueDate;
 
-    @NotNull
-    CompanyData receiver;
+      boolean asap;
 
-    @NotNull
-    ProjectData project;
+      @NotNull
+      ProjectData project;
 
-    @Valid
-    @NotNull
-    Address deliveryAddress;
+    }
 
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryTelephoneNumber;
+    @Value
+    class Response {
 
-    @Size(max = TypeDefinitions.PHONE_NUMBER_LENGTH)
-    String deliveryMobilePhoneNumber;
+      Collection<Event> events;
 
-  }
-
-  @Data
-  class DeleteRequest {
+    }
 
   }
 
-  @Data
-  class ProgressRequest {
+  interface Progress {
 
-    @Min(0)
-    @Max(1)
-    @NotNull
-    BigDecimal progressRate;
+    @Data
+    class Request {
 
-  }
+      @Min(0)
+      @Max(1)
+      @NotNull
+      BigDecimal progressRate;
 
-  @Data
-  class CommitRequest {
+    }
 
-    BomData bom;
+    @Value
+    class Response {
 
-    @NotNull
-    Auditor committedBy;
+      Collection<Event> events;
 
-  }
-
-  @Data
-  class CancelRequest {
-
-    @NotNull
-    Auditor canceledBy;
+    }
 
   }
 
-  @Data
-  class CompleteRequest {
+  interface Commit {
 
+    @Data
+    class Request {
 
-  }
+      @NotNull
+      UserData committer;
 
-  @Value
-  class CreateResponse {
+    }
 
-    Collection<Event> events;
+    @Value
+    class Response {
 
-  }
+      Collection<Event> events;
 
-  @Value
-  class UpdateResponse {
-
-    Collection<Event> events;
-
-  }
-
-  @Value
-  class DeleteResponse {
-
-    Collection<Event> events;
+    }
 
   }
 
-  @Value
-  class CommitResponse {
+  interface Accept {
 
-    Collection<Event> events;
+    @Data
+    class Request {
 
-  }
+      BomData bom;
 
-  @Value
-  class CancelResponse {
+      @NotNull
+      UserData accepter;
 
-    Collection<Event> events;
+    }
 
-  }
+    @Value
+    class Response {
 
-  @Value
-  class ProgressResponse {
+      Collection<Event> events;
 
-    Collection<Event> events;
-
-  }
-
-  @Value
-  class CompleteResponse {
-
-    Collection<Event> events;
+    }
 
   }
 
+  interface Cancel {
+
+    @Data
+    class Request {
+
+      @NotNull
+      UserData canceler;
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+
+  }
+
+  interface Complete {
+
+    @Data
+    class Request {
+
+
+    }
+
+    @Value
+    class Response {
+
+      Collection<Event> events;
+
+    }
+
+  }
 
 }

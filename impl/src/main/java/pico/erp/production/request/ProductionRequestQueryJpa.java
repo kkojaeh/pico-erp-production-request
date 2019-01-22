@@ -4,9 +4,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lombok.val;
@@ -16,10 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.shared.LabeledValue;
 import pico.erp.shared.Public;
-import pico.erp.shared.QExtendedLabeledValue;
-import pico.erp.shared.data.LabeledValuable;
 import pico.erp.shared.jpa.QueryDslJpaSupport;
 
 @Service
@@ -43,21 +38,20 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
     val query = new JPAQuery<ProductionRequestView>(entityManager);
     val select = Projections.bean(ProductionRequestView.class,
       productionRequest.id,
-      productionRequest.code,
       productionRequest.itemId,
+      productionRequest.code,
       productionRequest.dueDate,
       productionRequest.asap,
-      productionRequest.customerId,
-      productionRequest.purchaserId,
-      productionRequest.receiverId,
       productionRequest.projectId,
       productionRequest.status,
       productionRequest.createdBy,
       productionRequest.createdDate,
-      productionRequest.committedBy,
+      productionRequest.committerId,
       productionRequest.committedDate,
-      productionRequest.canceledBy,
-      productionRequest.canceledDate
+      productionRequest.cancelerId,
+      productionRequest.canceledDate,
+      productionRequest.accepterId,
+      productionRequest.acceptedDate
     );
     query.select(select);
     query.from(productionRequest);
@@ -68,15 +62,6 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
       builder.and(productionRequest.code.value
         .likeIgnoreCase(queryDslJpaSupport.toLikeKeyword("%", filter.getCode(), "%")));
     }
-
-    if (filter.getRelatedCompanyId() != null) {
-      builder.and(
-        productionRequest.customerId.eq(filter.getRelatedCompanyId())
-          .or(productionRequest.purchaserId.eq(filter.getRelatedCompanyId()))
-          .or(productionRequest.receiverId.eq(filter.getRelatedCompanyId()))
-      );
-    }
-
 
     if (filter.getProjectId() != null) {
       builder.and(productionRequest.projectId.eq(filter.getProjectId()));

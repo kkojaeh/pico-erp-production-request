@@ -19,8 +19,6 @@ import pico.erp.item.ItemService;
 import pico.erp.order.acceptance.OrderAcceptanceData;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.order.acceptance.OrderAcceptanceService;
-import pico.erp.process.ProcessData;
-import pico.erp.process.ProcessService;
 import pico.erp.production.plan.ProductionPlanData;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.plan.ProductionPlanService;
@@ -138,68 +136,18 @@ public abstract class ProductionRequestMapper {
     @Mapping(target = "itemId", source = "item.id"),
     @Mapping(target = "planId", source = "plan.id"),
     @Mapping(target = "orderAcceptanceId", source = "orderAcceptance.id"),
-    @Mapping(target = "customerId", source = "customer.id"),
-    @Mapping(target = "purchaserId", source = "purchaser.id"),
-    @Mapping(target = "receiverId", source = "receiver.id"),
     @Mapping(target = "projectId", source = "project.id")
   })
   public abstract ProductionRequestData map(ProductionRequest domain);
 
 
   @Mappings({
-    @Mapping(target = "item", source = "itemId"),
-    @Mapping(target = "customer", source = "customerId"),
-    @Mapping(target = "purchaser", source = "purchaserId"),
-    @Mapping(target = "receiver", source = "receiverId"),
-    @Mapping(target = "project", source = "projectId"),
-    @Mapping(target = "orderAcceptance", source = "orderAcceptanceId"),
-    @Mapping(target = "codeGenerator", expression = "java(productionRequestCodeGenerator)")
-  })
-  public abstract ProductionRequestMessages.CreateRequest map(
-    ProductionRequestRequests.CreateRequest request);
-
-  @Mappings({
-    @Mapping(target = "customer", source = "customerId"),
-    @Mapping(target = "purchaser", source = "purchaserId"),
-    @Mapping(target = "receiver", source = "receiverId"),
-    @Mapping(target = "project", source = "projectId")
-  })
-  public abstract ProductionRequestMessages.UpdateRequest map(
-    ProductionRequestRequests.UpdateRequest request);
-
-  public abstract ProductionRequestMessages.DeleteRequest map(
-    ProductionRequestRequests.DeleteRequest request);
-
-  @Mappings({
-    @Mapping(target = "bom", source = "id"),
-    @Mapping(target = "committedBy", expression = "java(auditorAware.getCurrentAuditor())")
-  })
-  public abstract ProductionRequestMessages.CommitRequest map(
-    ProductionRequestRequests.CommitRequest request);
-
-  @Mappings({
-    @Mapping(target = "canceledBy", expression = "java(auditorAware.getCurrentAuditor())")
-  })
-  public abstract ProductionRequestMessages.CancelRequest map(
-    ProductionRequestRequests.CancelRequest request);
-
-  @Mappings({
-  })
-  public abstract ProductionRequestMessages.ProgressRequest map(
-    ProductionRequestRequests.ProgressRequest request);
-
-  @Mappings({
-  })
-  public abstract ProductionRequestMessages.CompleteRequest map(
-    ProductionRequestRequests.CompleteRequest request);
-
-  @Mappings({
     @Mapping(target = "planId", source = "plan.id"),
-    @Mapping(target = "customerId", source = "customer.id"),
-    @Mapping(target = "purchaserId", source = "purchaser.id"),
-    @Mapping(target = "receiverId", source = "receiver.id"),
     @Mapping(target = "projectId", source = "project.id"),
     @Mapping(target = "itemId", source = "item.id"),
+    @Mapping(target = "committerId", source = "committer.id"),
+    @Mapping(target = "cancelerId", source = "canceler.id"),
+    @Mapping(target = "accepterId", source = "accepter.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
@@ -213,23 +161,64 @@ public abstract class ProductionRequestMapper {
       .code(entity.getCode())
       .item(map(entity.getItemId()))
       .quantity(entity.getQuantity())
+      .spareQuantity(entity.getSpareQuantity())
       .dueDate(entity.getDueDate())
       .asap(entity.isAsap())
-      .customer(map(entity.getCustomerId()))
-      .purchaser(map(entity.getPurchaserId()))
-      .receiver(map(entity.getReceiverId()))
       .project(map(entity.getProjectId()))
-      .deliveryAddress(entity.getDeliveryAddress())
-      .deliveryMobilePhoneNumber(entity.getDeliveryMobilePhoneNumber())
-      .deliveryTelephoneNumber(entity.getDeliveryTelephoneNumber())
       .status(entity.getStatus())
-      .committedBy(entity.getCommittedBy())
+      .committer(map(entity.getCommitterId()))
       .committedDate(entity.getCommittedDate())
-      .canceledBy(entity.getCanceledBy())
+      .canceler(map(entity.getCancelerId()))
       .canceledDate(entity.getCanceledDate())
+      .accepter(map(entity.getAccepterId()))
+      .acceptedDate(entity.getAcceptedDate())
       .plan(map(entity.getPlanId()))
       .build();
   }
+
+  @Mappings({
+    @Mapping(target = "bom", source = "id"),
+    @Mapping(target = "accepter", source = "accepterId")
+  })
+  public abstract ProductionRequestMessages.Accept.Request map(
+    ProductionRequestRequests.AcceptRequest request);
+
+  @Mappings({
+    @Mapping(target = "committer", source = "committerId")
+  })
+  public abstract ProductionRequestMessages.Commit.Request map(
+    ProductionRequestRequests.CommitRequest request);
+
+  @Mappings({
+    @Mapping(target = "canceler", source = "cancelerId")
+  })
+  public abstract ProductionRequestMessages.Cancel.Request map(
+    ProductionRequestRequests.CancelRequest request);
+
+  @Mappings({
+  })
+  public abstract ProductionRequestMessages.Progress.Request map(
+    ProductionRequestRequests.ProgressRequest request);
+
+  @Mappings({
+  })
+  public abstract ProductionRequestMessages.Complete.Request map(
+    ProductionRequestRequests.CompleteRequest request);
+
+  @Mappings({
+    @Mapping(target = "item", source = "itemId"),
+    @Mapping(target = "project", source = "projectId"),
+    @Mapping(target = "orderAcceptance", source = "orderAcceptanceId"),
+    @Mapping(target = "codeGenerator", expression = "java(productionRequestCodeGenerator)")
+  })
+  public abstract ProductionRequestMessages.Create.Request map(
+    ProductionRequestRequests.CreateRequest request);
+
+  @Mappings({
+    @Mapping(target = "project", source = "projectId")
+  })
+  public abstract ProductionRequestMessages.Update.Request map(
+    ProductionRequestRequests.UpdateRequest request);
 
   public abstract void pass(ProductionRequestEntity from,
     @MappingTarget ProductionRequestEntity to);

@@ -27,12 +27,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.TypeDefinitions;
-import pico.erp.shared.data.Address;
 import pico.erp.shared.data.Auditor;
 import pico.erp.user.UserId;
 
@@ -69,43 +67,17 @@ public class ProductionRequestEntity implements Serializable {
   @Column(precision = 19, scale = 2)
   BigDecimal quantity;
 
+  @Column(precision = 19, scale = 2)
+  BigDecimal spareQuantity;
+
   OffsetDateTime dueDate;
 
   boolean asap;
 
   @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "CUSTOMER_ID", length = TypeDefinitions.ID_LENGTH))
-  })
-  CompanyId customerId;
-
-  @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "PURCHASER_ID", length = TypeDefinitions.ID_LENGTH))
-  })
-  CompanyId purchaserId;
-
-  @AttributeOverrides({
-    @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
-  })
-  CompanyId receiverId;
-
-  @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "PROJECT_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
   })
   ProjectId projectId;
-
-  @Embedded
-  @AttributeOverrides({
-    @AttributeOverride(name = "postalCode", column = @Column(name = "DELIVERY_ADDRESS_POSTAL_CODE", length = TypeDefinitions.ADDRESS_POSTAL_LENGTH)),
-    @AttributeOverride(name = "street", column = @Column(name = "DELIVERY_ADDRESS_STREET", length = TypeDefinitions.ADDRESS_STREET_LENGTH)),
-    @AttributeOverride(name = "detail", column = @Column(name = "DELIVERY_ADDRESS_DETAIL", length = TypeDefinitions.ADDRESS_DETAIL_LENGTH))
-  })
-  Address deliveryAddress;
-
-  @Column(length = TypeDefinitions.PHONE_NUMBER_LENGTH)
-  String deliveryTelephoneNumber;
-
-  @Column(length = TypeDefinitions.PHONE_NUMBER_LENGTH)
-  String deliveryMobilePhoneNumber;
 
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)
@@ -137,20 +109,18 @@ public class ProductionRequestEntity implements Serializable {
 
   @Embedded
   @AttributeOverrides({
-    @AttributeOverride(name = "id", column = @Column(name = "COMMITTED_BY_ID", length = TypeDefinitions.ID_LENGTH)),
-    @AttributeOverride(name = "name", column = @Column(name = "COMMITTED_BY_NAME", length = TypeDefinitions.NAME_LENGTH))
+    @AttributeOverride(name = "value", column = @Column(name = "COMMITTER_ID", length = TypeDefinitions.ID_LENGTH)),
   })
-  Auditor committedBy;
+  UserId committerId;
 
   @Column
   OffsetDateTime committedDate;
 
   @Embedded
   @AttributeOverrides({
-    @AttributeOverride(name = "id", column = @Column(name = "CANCELED_BY_ID", length = TypeDefinitions.ID_LENGTH)),
-    @AttributeOverride(name = "name", column = @Column(name = "CANCELED_BY_NAME", length = TypeDefinitions.NAME_LENGTH))
+    @AttributeOverride(name = "value", column = @Column(name = "CANCELER_ID", length = TypeDefinitions.ID_LENGTH)),
   })
-  Auditor canceledBy;
+  UserId cancelerId;
 
   @Column
   OffsetDateTime canceledDate;
@@ -159,5 +129,14 @@ public class ProductionRequestEntity implements Serializable {
     @AttributeOverride(name = "value", column = @Column(name = "PLAN_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
   })
   ProductionPlanId planId;
+
+  @Embedded
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "ACCEPTER_ID", length = TypeDefinitions.ID_LENGTH)),
+  })
+  UserId accepterId;
+
+  @Column
+  OffsetDateTime acceptedDate;
 
 }

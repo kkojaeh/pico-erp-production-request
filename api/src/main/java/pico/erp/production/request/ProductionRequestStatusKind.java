@@ -1,7 +1,6 @@
 package pico.erp.production.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import pico.erp.shared.data.LocalizedNameable;
 
 @AllArgsConstructor
@@ -10,35 +9,55 @@ public enum ProductionRequestStatusKind implements LocalizedNameable {
   /**
    * 주문이 접수가 생성됨을 의미
    */
-  CREATED(true, true, true),
+  CREATED,
 
   /**
    * 제출 함
    */
-  COMMITTED(false, false, true),
+  COMMITTED,
 
   /**
    * 취소 됨
    */
-  CANCELED(false, false, false),
+  CANCELED,
+
+  /**
+   * 접수 됨
+   */
+  ACCEPTED,
 
   /**
    * 진행중
    */
-  IN_PROGRESS(false, false, false),
+  IN_PROGRESS,
 
   /**
    * 생산완료
    */
-  COMPLETED(false, false, false);
+  COMPLETED;
 
-  @Getter
-  private final boolean updatable;
+  public boolean isAcceptable() {
+    return this == COMMITTED;
+  }
 
-  @Getter
-  private final boolean committable;
+  public boolean isCancelable() {
+    return this == CREATED || this == COMMITTED || this == ACCEPTED;
+  }
 
-  @Getter
-  private final boolean cancelable;
+  public boolean isCommittable() {
+    return this == CREATED;
+  }
+
+  public boolean isCompletable() {
+    return this == IN_PROGRESS;
+  }
+
+  public boolean isProgressable() {
+    return this == ACCEPTED;
+  }
+
+  public boolean isUpdatable() {
+    return this == CREATED;
+  }
 
 }

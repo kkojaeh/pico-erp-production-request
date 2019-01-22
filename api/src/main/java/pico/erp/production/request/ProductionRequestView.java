@@ -1,12 +1,12 @@
 package pico.erp.production.request;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.data.Auditor;
@@ -23,13 +23,11 @@ public class ProductionRequestView {
 
   OffsetDateTime dueDate;
 
+  BigDecimal quantity;
+
+  BigDecimal spareQuantity;
+
   boolean asap;
-
-  CompanyId customerId;
-
-  CompanyId purchaserId;
-
-  CompanyId receiverId;
 
   ProjectId projectId;
 
@@ -39,13 +37,17 @@ public class ProductionRequestView {
 
   OffsetDateTime createdDate;
 
-  Auditor committedBy;
+  UserId committerId;
 
   OffsetDateTime committedDate;
 
-  Auditor canceledBy;
+  UserId cancelerId;
 
   OffsetDateTime canceledDate;
+
+  UserId accepterId;
+
+  OffsetDateTime acceptedDate;
 
   @Data
   @NoArgsConstructor
@@ -54,8 +56,6 @@ public class ProductionRequestView {
   public static class Filter {
 
     String code;
-
-    CompanyId relatedCompanyId;
 
     ProjectId projectId;
 

@@ -10,7 +10,6 @@ import pico.erp.audit.AuditService;
 import pico.erp.production.request.ProductionRequestRequests.CancelRequest;
 import pico.erp.production.request.ProductionRequestRequests.CompleteRequest;
 import pico.erp.production.request.ProductionRequestRequests.ProgressRequest;
-import pico.erp.project.ProjectExceptions.NotFoundException;
 import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
@@ -68,7 +67,7 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
   }
 
   @Override
-  public void delete(ProductionRequestRequests.DeleteRequest request) {
+  public void accept(ProductionRequestRequests.AcceptRequest request) {
     val productionRequest = productionRequestRepository.findBy(request.getId())
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));

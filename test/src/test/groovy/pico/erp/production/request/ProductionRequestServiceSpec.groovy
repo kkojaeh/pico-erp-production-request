@@ -7,11 +7,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import pico.erp.company.CompanyId
 import pico.erp.item.ItemId
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
-import pico.erp.shared.data.Address
+import pico.erp.user.UserId
 import spock.lang.Specification
 
 import java.time.OffsetDateTime
@@ -35,22 +34,13 @@ class ProductionRequestServiceSpec extends Specification {
 
   def dueDate = OffsetDateTime.now().plusDays(7)
 
-  def customerId = CompanyId.from("CUST1")
+  def committerId = UserId.from("kjh")
 
-  def purchaserId = CompanyId.from("CUST1")
+  def accepterId = UserId.from("kjh")
 
-  def receiverId = CompanyId.from("CUST1")
+  def cancelerId = UserId.from("kjh")
 
   def projectId = ProjectId.from("sample-project1")
-
-  def deliveryMobilePhoneNumber = "+8291111111"
-  def deliveryTelephoneNumber = "+8291111112"
-
-  def deliveryAddress = new Address(
-    postalCode: '13496',
-    street: '경기도 성남시 분당구 장미로 42',
-    detail: '야탑리더스 410호'
-  )
 
   def setup() {
     requestService.create(
@@ -60,13 +50,7 @@ class ProductionRequestServiceSpec extends Specification {
         asap: true,
         quantity: 100,
         dueDate: dueDate,
-        customerId: customerId,
-        purchaserId: purchaserId,
-        receiverId: receiverId,
-        projectId: projectId,
-        deliveryAddress: deliveryAddress,
-        deliveryMobilePhoneNumber: deliveryMobilePhoneNumber,
-        deliveryTelephoneNumber: deliveryTelephoneNumber
+        projectId: projectId
       )
     )
   }
@@ -78,13 +62,7 @@ class ProductionRequestServiceSpec extends Specification {
         asap: false,
         quantity: 100,
         dueDate: dueDate,
-        customerId: customerId,
-        purchaserId: purchaserId,
-        receiverId: receiverId,
-        projectId: projectId,
-        deliveryAddress: deliveryAddress,
-        deliveryMobilePhoneNumber: deliveryMobilePhoneNumber,
-        deliveryTelephoneNumber: deliveryTelephoneNumber
+        projectId: projectId
       )
     )
   }
@@ -92,7 +70,8 @@ class ProductionRequestServiceSpec extends Specification {
   def commitRequest() {
     requestService.commit(
       new ProductionRequestRequests.CommitRequest(
-        id: requestId
+        id: requestId,
+        committerId: committerId
       )
     )
   }
@@ -108,7 +87,17 @@ class ProductionRequestServiceSpec extends Specification {
   def cancelRequest() {
     requestService.cancel(
       new ProductionRequestRequests.CancelRequest(
-        id: requestId
+        id: requestId,
+        cancelerId: cancelerId
+      )
+    )
+  }
+
+  def acceptRequest() {
+    requestService.accept(
+      new ProductionRequestRequests.AcceptRequest(
+        id: requestId,
+        accepterId: accepterId
       )
     )
   }
@@ -146,16 +135,8 @@ class ProductionRequestServiceSpec extends Specification {
     request.itemId == itemId
     request.quantity == 100
     request.dueDate == dueDate
-    request.customerId == customerId
-    request.purchaserId == purchaserId
     request.asap == true
-    request.receiverId == receiverId
     request.projectId == projectId
-    request.deliveryAddress.postalCode == deliveryAddress.postalCode
-    request.deliveryAddress.street == deliveryAddress.street
-    request.deliveryAddress.detail == deliveryAddress.detail
-    request.deliveryMobilePhoneNumber == deliveryMobilePhoneNumber
-    request.deliveryTelephoneNumber == deliveryTelephoneNumber
   }
 
   def "조회 - 존재하지 않는 아이디로 조회"() {
@@ -187,6 +168,7 @@ class ProductionRequestServiceSpec extends Specification {
   def "수정 - 진행 중 수정 불가"() {
     when:
     commitRequest()
+    acceptRequest()
     progressRequest(0.1)
     updateRequest()
 
@@ -197,6 +179,8 @@ class ProductionRequestServiceSpec extends Specification {
   def "수정 - 완료 후 수정 불가"() {
     when:
     commitRequest()
+    acceptRequest()
+    progressRequest(0.5)
     completeRequest()
     updateRequest()
 
@@ -213,16 +197,8 @@ class ProductionRequestServiceSpec extends Specification {
     request.itemId == itemId
     request.quantity == 100
     request.dueDate == dueDate
-    request.customerId == customerId
-    request.purchaserId == purchaserId
     request.asap == false
-    request.receiverId == receiverId
     request.projectId == projectId
-    request.deliveryAddress.postalCode == deliveryAddress.postalCode
-    request.deliveryAddress.street == deliveryAddress.street
-    request.deliveryAddress.detail == deliveryAddress.detail
-    request.deliveryMobilePhoneNumber == deliveryMobilePhoneNumber
-    request.deliveryTelephoneNumber == deliveryTelephoneNumber
   }
 
   def "제출 - 제출 후 제출 불가"() {
@@ -246,6 +222,7 @@ class ProductionRequestServiceSpec extends Specification {
   def "제출 - 진행 중 제출 불가"() {
     when:
     commitRequest()
+    acceptRequest()
     progressRequest(0.1)
     commitRequest()
 
@@ -256,6 +233,8 @@ class ProductionRequestServiceSpec extends Specification {
   def "제출 - 완료 후 제출 불가"() {
     when:
     commitRequest()
+    acceptRequest()
+    progressRequest(0.5)
     completeRequest()
     commitRequest()
 
@@ -275,6 +254,7 @@ class ProductionRequestServiceSpec extends Specification {
   def "취소 - 진행 중 취소 불가"() {
     when:
     commitRequest()
+    acceptRequest()
     progressRequest(0.1)
     cancelRequest()
 
@@ -285,6 +265,8 @@ class ProductionRequestServiceSpec extends Specification {
   def "취소 - 완료 휴 취소 불가"() {
     when:
     commitRequest()
+    acceptRequest()
+    progressRequest(0.5)
     completeRequest()
     cancelRequest()
 
