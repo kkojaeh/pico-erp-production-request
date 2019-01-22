@@ -47,6 +47,7 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
       productionRequest.asap,
       productionRequest.projectId,
       productionRequest.status,
+      productionRequest.requesterId,
       productionRequest.createdBy,
       productionRequest.createdDate,
       productionRequest.committerId,

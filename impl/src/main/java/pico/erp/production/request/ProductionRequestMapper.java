@@ -148,6 +148,7 @@ public abstract class ProductionRequestMapper {
     @Mapping(target = "planId", source = "plan.id"),
     @Mapping(target = "projectId", source = "project.id"),
     @Mapping(target = "itemId", source = "item.id"),
+    @Mapping(target = "requesterId", source = "requester.id"),
     @Mapping(target = "committerId", source = "committer.id"),
     @Mapping(target = "cancelerId", source = "canceler.id"),
     @Mapping(target = "accepterId", source = "accepter.id"),
@@ -175,6 +176,7 @@ public abstract class ProductionRequestMapper {
       .canceledDate(entity.getCanceledDate())
       .accepter(map(entity.getAccepterId()))
       .acceptedDate(entity.getAcceptedDate())
+      .requester(map(entity.getRequesterId()))
       .plan(map(entity.getPlanId()))
       .build();
   }
@@ -215,6 +217,7 @@ public abstract class ProductionRequestMapper {
     ProductionRequestRequests.PlanRequest request);
 
   @Mappings({
+    @Mapping(target = "requester", source = "requesterId"),
     @Mapping(target = "item", source = "itemId"),
     @Mapping(target = "project", source = "projectId"),
     @Mapping(target = "orderAcceptance", source = "orderAcceptanceId"),

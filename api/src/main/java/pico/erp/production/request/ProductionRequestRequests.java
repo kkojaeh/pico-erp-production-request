@@ -54,6 +54,10 @@ public interface ProductionRequestRequests {
     @Valid
     OrderAcceptanceId orderAcceptanceId;
 
+    @Valid
+    @NotNull
+    UserId requesterId;
+
 
   }
 

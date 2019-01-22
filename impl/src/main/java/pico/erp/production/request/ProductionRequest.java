@@ -59,6 +59,8 @@ public class ProductionRequest implements Serializable {
 
   ProductionRequestStatusKind status;
 
+  UserData requester;
+
   UserData committer;
 
   OffsetDateTime committedDate;
@@ -91,6 +93,7 @@ public class ProductionRequest implements Serializable {
     this.status = ProductionRequestStatusKind.CREATED;
     this.orderAcceptance = request.getOrderAcceptance();
     this.progressRate = BigDecimal.ZERO;
+    this.requester = request.getRequester();
     this.code = request.getCodeGenerator().generate(this);
 
     return new ProductionRequestMessages.Create.Response(
@@ -141,7 +144,7 @@ public class ProductionRequest implements Serializable {
 
   public ProductionRequestMessages.Commit.Response apply(
     ProductionRequestMessages.Commit.Request request) {
-    if (!isCommittable()) {
+    if (!isCommittable() || !requester.equals(request.getCommitter())) {
       throw new ProductionRequestExceptions.CannotCommitException();
     }
     status = ProductionRequestStatusKind.COMMITTED;

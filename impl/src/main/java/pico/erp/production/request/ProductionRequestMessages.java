@@ -56,6 +56,9 @@ public interface ProductionRequestMessages {
       @Valid
       OrderAcceptanceData orderAcceptance;
 
+      @NotNull
+      UserData requester;
+
     }
 
     @Value

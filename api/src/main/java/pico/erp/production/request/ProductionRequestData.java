@@ -34,6 +34,8 @@ public class ProductionRequestData {
 
   ProductionRequestStatusKind status;
 
+  UserId requesterId;
+
   UserId committerId;
 
   OffsetDateTime committedDate;

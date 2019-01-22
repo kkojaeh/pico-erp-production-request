@@ -33,6 +33,8 @@ public class ProductionRequestView {
 
   ProductionRequestStatusKind status;
 
+  UserId requesterId;
+
   Auditor createdBy;
 
   OffsetDateTime createdDate;

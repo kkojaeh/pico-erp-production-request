@@ -40,6 +40,8 @@ class ProductionRequestServiceSpec extends Specification {
 
   def cancelerId = UserId.from("kjh")
 
+  def requesterId = UserId.from("kjh")
+
   def projectId = ProjectId.from("sample-project1")
 
   def setup() {
@@ -51,7 +53,8 @@ class ProductionRequestServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 10,
         dueDate: dueDate,
-        projectId: projectId
+        projectId: projectId,
+        requesterId: requesterId
       )
     )
   }

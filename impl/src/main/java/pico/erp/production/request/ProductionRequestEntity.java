@@ -109,6 +109,12 @@ public class ProductionRequestEntity implements Serializable {
 
   @Embedded
   @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "REQUESTER_ID", length = TypeDefinitions.ID_LENGTH)),
+  })
+  UserId requesterId;
+
+  @Embedded
+  @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "COMMITTER_ID", length = TypeDefinitions.ID_LENGTH)),
   })
   UserId committerId;
