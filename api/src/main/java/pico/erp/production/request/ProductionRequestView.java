@@ -51,6 +51,8 @@ public class ProductionRequestView {
 
   OffsetDateTime acceptedDate;
 
+  OffsetDateTime completedDate;
+
   @Data
   @NoArgsConstructor
   @AllArgsConstructor

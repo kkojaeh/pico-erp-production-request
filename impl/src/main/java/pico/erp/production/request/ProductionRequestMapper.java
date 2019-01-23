@@ -178,6 +178,7 @@ public abstract class ProductionRequestMapper {
       .acceptedDate(entity.getAcceptedDate())
       .requester(map(entity.getRequesterId()))
       .plan(map(entity.getPlanId()))
+      .completedDate(entity.getCompletedDate())
       .build();
   }
 

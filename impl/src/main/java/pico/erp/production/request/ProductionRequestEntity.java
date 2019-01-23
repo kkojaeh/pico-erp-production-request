@@ -145,4 +145,6 @@ public class ProductionRequestEntity implements Serializable {
   @Column
   OffsetDateTime acceptedDate;
 
+  OffsetDateTime completedDate;
+
 }
