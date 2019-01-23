@@ -138,6 +138,7 @@ public abstract class ProductionRequestMapper {
     @Mapping(target = "committerId", source = "committer.id"),
     @Mapping(target = "cancelerId", source = "canceler.id"),
     @Mapping(target = "accepterId", source = "accepter.id"),
+    @Mapping(target = "requesterId", source = "requester.id"),
     @Mapping(target = "orderAcceptanceId", source = "orderAcceptance.id"),
     @Mapping(target = "projectId", source = "project.id")
   })
