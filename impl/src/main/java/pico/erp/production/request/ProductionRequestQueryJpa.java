@@ -122,6 +122,10 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
         .likeIgnoreCase(queryDslJpaSupport.toLikeKeyword("%", filter.getCode(), "%")));
     }
 
+    if (filter.getRequesterId() != null) {
+      builder.and(productionRequest.requesterId.eq(filter.getRequesterId()));
+    }
+
     if (filter.getProjectId() != null) {
       builder.and(productionRequest.projectId.eq(filter.getProjectId()));
     }

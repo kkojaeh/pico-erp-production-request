@@ -45,6 +45,8 @@ public class ProductionRequestAwaitAcceptView {
 
     ItemId itemId;
 
+    UserId requesterId;
+
     OffsetDateTime startDueDate;
 
     OffsetDateTime endDueDate;
