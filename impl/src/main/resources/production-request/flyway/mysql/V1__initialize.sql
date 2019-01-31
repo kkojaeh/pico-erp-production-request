@@ -25,3 +25,6 @@ create table prr_production_request (
 	status varchar(20),
 	primary key (id)
 ) engine=InnoDB;
+
+create index IDX9oab398ibuwdr5dvv0k3kh95b
+	on prr_production_request (plan_id);

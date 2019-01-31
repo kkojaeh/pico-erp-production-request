@@ -2,6 +2,7 @@ package pico.erp.production.request;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import pico.erp.production.plan.ProductionPlanId;
 
 public interface ProductionRequestService {
 
@@ -16,7 +17,11 @@ public interface ProductionRequestService {
 
   boolean exists(@Valid @NotNull ProductionRequestId id);
 
+  boolean exists(@Valid @NotNull ProductionPlanId planId);
+
   ProductionRequestData get(@Valid @NotNull ProductionRequestId id);
+
+  ProductionRequestData get(@Valid @NotNull ProductionPlanId planId);
 
   void update(@Valid @NotNull ProductionRequestRequests.UpdateRequest request);
 

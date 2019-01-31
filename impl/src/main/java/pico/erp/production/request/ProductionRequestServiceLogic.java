@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.audit.AuditService;
+import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.request.ProductionRequestRequests.CancelRequest;
 import pico.erp.production.request.ProductionRequestRequests.CompleteRequest;
 import pico.erp.production.request.ProductionRequestRequests.PlanRequest;
@@ -83,8 +84,20 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
   }
 
   @Override
+  public boolean exists(ProductionPlanId planId) {
+    return productionRequestRepository.exists(planId);
+  }
+
+  @Override
   public ProductionRequestData get(ProductionRequestId id) {
     return productionRequestRepository.findBy(id)
+      .map(mapper::map)
+      .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
+  }
+
+  @Override
+  public ProductionRequestData get(ProductionPlanId planId) {
+    return productionRequestRepository.findBy(planId)
       .map(mapper::map)
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
   }
