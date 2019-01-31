@@ -46,7 +46,7 @@ public enum ProductionRequestStatusKind implements LocalizedNameable {
   }
 
   public boolean isCancelable() {
-    return this == CREATED || this == COMMITTED || this == ACCEPTED;
+    return this == CREATED || this == COMMITTED || this == ACCEPTED || this == IN_PLANNING;
   }
 
   public boolean isCommittable() {
