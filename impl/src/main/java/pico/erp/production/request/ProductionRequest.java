@@ -14,6 +14,7 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
 import pico.erp.audit.annotation.Audit;
+import pico.erp.bom.BomStatusKind;
 import pico.erp.item.ItemData;
 import pico.erp.item.ItemStatusKind;
 import pico.erp.order.acceptance.OrderAcceptanceData;
@@ -164,9 +165,9 @@ public class ProductionRequest implements Serializable {
     if (item.getStatus() != ItemStatusKind.ACTIVATED) {
       throw new ProductionRequestExceptions.CannotAcceptItemDeactivatedException();
     }
-    /*if (bom.getStatus() != BomStatusKind.DETERMINED) {
+    if (bom.getStatus() != BomStatusKind.DETERMINED) {
       throw new ProductionRequestExceptions.CannotAcceptBomNotDeterminedException();
-    }*/
+    }
     status = ProductionRequestStatusKind.ACCEPTED;
     accepter = request.getAccepter();
     acceptedDate = OffsetDateTime.now();

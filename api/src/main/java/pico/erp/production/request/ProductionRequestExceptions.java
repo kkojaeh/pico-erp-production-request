@@ -23,7 +23,7 @@ public interface ProductionRequestExceptions {
     private static final long serialVersionUID = 1L;
   }
 
-  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.commit.exception")
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.accept.exception")
   class CannotAcceptException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
