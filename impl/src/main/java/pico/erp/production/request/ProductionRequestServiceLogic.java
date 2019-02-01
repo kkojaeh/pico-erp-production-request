@@ -74,7 +74,7 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.delete(productionRequest);
+    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
