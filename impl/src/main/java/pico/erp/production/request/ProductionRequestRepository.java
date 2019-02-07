@@ -9,7 +9,7 @@ import pico.erp.production.plan.ProductionPlanId;
 @Repository
 public interface ProductionRequestRepository {
 
-  ProductionRequest create(@NotNull ProductionRequest orderAcceptance);
+  ProductionRequest create(@NotNull ProductionRequest productionRequest);
 
   void deleteBy(@NotNull ProductionRequestId id);
 
@@ -21,7 +21,7 @@ public interface ProductionRequestRepository {
 
   Optional<ProductionRequest> findBy(@NotNull ProductionPlanId planId);
 
-  void update(@NotNull ProductionRequest orderAcceptance);
+  void update(@NotNull ProductionRequest productionRequest);
 
   long countCreatedBetween(OffsetDateTime begin, OffsetDateTime end);
 

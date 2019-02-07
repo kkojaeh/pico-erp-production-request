@@ -46,7 +46,7 @@ public abstract class ProductionRequestMapper {
 
   @Lazy
   @Autowired
-  private ProductionRequestRepository orderAcceptanceRepository;
+  private ProductionRequestRepository productionRequestRepository;
 
   @Lazy
   @Autowired
@@ -98,7 +98,7 @@ public abstract class ProductionRequestMapper {
 
   public ProductionRequest map(ProductionRequestId requestId) {
     return Optional.ofNullable(requestId)
-      .map(id -> orderAcceptanceRepository.findBy(id)
+      .map(id -> productionRequestRepository.findBy(id)
         .orElseThrow(ProductionRequestExceptions.NotFoundException::new)
       )
       .orElse(null);
