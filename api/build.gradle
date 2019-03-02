@@ -27,5 +27,6 @@ dependencies {
 
   compile("com.github.kkojaeh.pico-erp-process:api:${processVersion}")
 
+  compile("com.github.kkojaeh.pico-erp-product-specification:api:${productSpecificationVersion}")
 
 }

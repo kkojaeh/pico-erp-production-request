@@ -18,6 +18,7 @@ import pico.erp.bom.BomStatusKind;
 import pico.erp.item.ItemData;
 import pico.erp.item.ItemStatusKind;
 import pico.erp.order.acceptance.OrderAcceptanceData;
+import pico.erp.product.specification.ProductSpecificationStatusKind;
 import pico.erp.production.plan.ProductionPlanData;
 import pico.erp.production.request.ProductionRequestExceptions.CannotUpdateException;
 import pico.erp.project.ProjectData;
@@ -162,11 +163,16 @@ public class ProductionRequest implements Serializable {
       throw new ProductionRequestExceptions.CannotAcceptException();
     }
     val bom = request.getBom();
+    val productSpecification = request.getProductSpecification();
     if (item.getStatus() != ItemStatusKind.ACTIVATED) {
       throw new ProductionRequestExceptions.CannotAcceptItemDeactivatedException();
     }
-    if (bom.getStatus() != BomStatusKind.DETERMINED) {
+    if (bom == null || bom.getStatus() != BomStatusKind.DETERMINED) {
       throw new ProductionRequestExceptions.CannotAcceptBomNotDeterminedException();
+    }
+    if (productSpecification == null
+      || productSpecification.getStatus() != ProductSpecificationStatusKind.COMMITTED) {
+      throw new ProductionRequestExceptions.CannotAcceptProductSpecificationNotCommittedException();
     }
     status = ProductionRequestStatusKind.ACCEPTED;
     accepter = request.getAccepter();

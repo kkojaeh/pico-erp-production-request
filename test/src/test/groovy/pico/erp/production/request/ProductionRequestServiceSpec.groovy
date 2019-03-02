@@ -4,10 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import pico.erp.item.ItemId
+import pico.erp.product.specification.ProductSpecificationId
+import pico.erp.product.specification.ProductSpecificationRequests
+import pico.erp.product.specification.ProductSpecificationService
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
 import pico.erp.user.UserId
@@ -25,6 +29,10 @@ class ProductionRequestServiceSpec extends Specification {
 
   @Autowired
   ProductionRequestService requestService
+
+  @Lazy
+  @Autowired
+  ProductSpecificationService productSpecificationService
 
   def id = ProductionRequestId.from("request-1")
 
@@ -44,6 +52,8 @@ class ProductionRequestServiceSpec extends Specification {
 
   def projectId = ProjectId.from("sample-project1")
 
+  ProductSpecificationId productSpecificationId = ProductSpecificationId.from("toothbrush-0")
+
   def setup() {
     requestService.create(
       new ProductionRequestRequests.CreateRequest(
@@ -55,6 +65,19 @@ class ProductionRequestServiceSpec extends Specification {
         dueDate: dueDate,
         projectId: projectId,
         requesterId: requesterId
+      )
+    )
+    productSpecificationService.draft(
+      new ProductSpecificationRequests.DraftRequest(
+        id: productSpecificationId,
+        itemId: itemId
+      )
+    )
+
+    productSpecificationService.commit(
+      new ProductSpecificationRequests.CommitRequest(
+        id: productSpecificationId,
+        committerId: requesterId
       )
     )
   }

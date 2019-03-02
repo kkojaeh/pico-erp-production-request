@@ -19,6 +19,8 @@ import pico.erp.item.ItemService;
 import pico.erp.order.acceptance.OrderAcceptanceData;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.order.acceptance.OrderAcceptanceService;
+import pico.erp.product.specification.ProductSpecificationData;
+import pico.erp.product.specification.ProductSpecificationService;
 import pico.erp.production.plan.ProductionPlanData;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.plan.ProductionPlanService;
@@ -70,6 +72,10 @@ public abstract class ProductionRequestMapper {
   @Lazy
   @Autowired
   protected ProductionPlanService productionPlanService;
+
+  @Lazy
+  @Autowired
+  protected ProductSpecificationService productSpecificationService;
 
 
   protected UserData map(UserId userId) {
@@ -128,9 +134,23 @@ public abstract class ProductionRequestMapper {
     }
   }
 
+  @Mappings({
+    @Mapping(target = "bom", source = "id"),
+    @Mapping(target = "productSpecification", source = "id"),
+    @Mapping(target = "accepter", source = "accepterId")
+  })
+  public abstract ProductionRequestMessages.Accept.Request map(
+    ProductionRequestRequests.AcceptRequest request);
+
   protected BomData bom(ProductionRequestId requestId) {
     return bom(map(requestId).getItem().getId());
   }
+
+  protected ProductSpecificationData spec(ProductionRequestId requestId) {
+    return spec(map(requestId).getItem().getId());
+  }
+
+
 
   @Mappings({
     @Mapping(target = "itemId", source = "item.id"),
@@ -183,12 +203,16 @@ public abstract class ProductionRequestMapper {
       .build();
   }
 
-  @Mappings({
-    @Mapping(target = "bom", source = "id"),
-    @Mapping(target = "accepter", source = "accepterId")
-  })
-  public abstract ProductionRequestMessages.Accept.Request map(
-    ProductionRequestRequests.AcceptRequest request);
+  protected ProductSpecificationData spec(ItemId itemId) {
+    if (itemId == null) {
+      return null;
+    }
+    if (productSpecificationService.exists(itemId)) {
+      return productSpecificationService.get(itemId);
+    } else {
+      return null;
+    }
+  }
 
   @Mappings({
     @Mapping(target = "committer", source = "committerId")

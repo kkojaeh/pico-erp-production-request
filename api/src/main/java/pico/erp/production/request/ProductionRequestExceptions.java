@@ -29,6 +29,12 @@ public interface ProductionRequestExceptions {
     private static final long serialVersionUID = 1L;
   }
 
+  @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.accept.product-specification.not.committed.exception")
+  class CannotAcceptProductSpecificationNotCommittedException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+  }
+
   @ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE, reason = "production-request.cannot.accept.bom.not.determined.exception")
   class CannotAcceptBomNotDeterminedException extends RuntimeException {
 

@@ -13,6 +13,7 @@ import lombok.Value;
 import pico.erp.bom.BomData;
 import pico.erp.item.ItemData;
 import pico.erp.order.acceptance.OrderAcceptanceData;
+import pico.erp.product.specification.ProductSpecificationData;
 import pico.erp.production.plan.ProductionPlanData;
 import pico.erp.project.ProjectData;
 import pico.erp.shared.event.Event;
@@ -174,6 +175,8 @@ public interface ProductionRequestMessages {
     class Request {
 
       BomData bom;
+
+      ProductSpecificationData productSpecification;
 
       @NotNull
       UserData accepter;
