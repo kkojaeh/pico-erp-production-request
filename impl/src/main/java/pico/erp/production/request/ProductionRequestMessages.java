@@ -18,6 +18,7 @@ import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.product.specification.ProductSpecificationData;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.shared.event.Event;
 import pico.erp.user.UserId;
 
@@ -68,6 +69,9 @@ public interface ProductionRequestMessages {
       @NotNull
       CompanyId receiverId;
 
+      @NotNull
+      UnitKind unit;
+
     }
 
     @Value
@@ -108,6 +112,9 @@ public interface ProductionRequestMessages {
       @Valid
       @NotNull
       CompanyId receiverId;
+
+      @NotNull
+      UnitKind unit;
 
     }
 

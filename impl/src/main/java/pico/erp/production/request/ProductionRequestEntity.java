@@ -34,6 +34,7 @@ import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
 import pico.erp.shared.TypeDefinitions;
 import pico.erp.shared.data.Auditor;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.user.UserId;
 
 @Entity(name = "ProductionRequest")
@@ -155,5 +156,9 @@ public class ProductionRequestEntity implements Serializable {
     @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
   })
   CompanyId receiverId;
+
+  @Column(length = TypeDefinitions.ENUM_LENGTH)
+  @Enumerated(EnumType.STRING)
+  UnitKind unit;
 
 }

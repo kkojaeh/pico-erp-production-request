@@ -163,6 +163,7 @@ public abstract class ProductionRequestMapper {
       .planId(entity.getPlanId())
       .completedDate(entity.getCompletedDate())
       .receiverId(entity.getReceiverId())
+      .unit(entity.getUnit())
       .build();
   }
 

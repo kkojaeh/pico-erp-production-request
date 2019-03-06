@@ -17,6 +17,7 @@ import pico.erp.item.ItemId;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.user.UserId;
 
 public interface ProductionRequestRequests {
@@ -63,6 +64,8 @@ public interface ProductionRequestRequests {
     @NotNull
     CompanyId receiverId;
 
+    @NotNull
+    UnitKind unit;
 
   }
 
@@ -100,6 +103,9 @@ public interface ProductionRequestRequests {
     @Valid
     @NotNull
     CompanyId receiverId;
+
+    @NotNull
+    UnitKind unit;
 
   }
 

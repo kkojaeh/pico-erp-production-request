@@ -126,6 +126,8 @@ public class ProductionRequestEventListener {
         .spareQuantity(request.getSpareQuantity())
         .dueDate(request.getDueDate())
         .receiverId(request.getReceiverId())
+        .unit(request.getUnit())
+        .plannerId(request.getAccepterId())
         .build()
     );
 

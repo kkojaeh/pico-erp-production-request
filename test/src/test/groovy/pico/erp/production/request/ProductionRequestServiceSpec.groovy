@@ -8,12 +8,14 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.company.CompanyId
 import pico.erp.item.ItemId
 import pico.erp.product.specification.ProductSpecificationId
 import pico.erp.product.specification.ProductSpecificationRequests
 import pico.erp.product.specification.ProductSpecificationService
 import pico.erp.project.ProjectId
 import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.data.UnitKind
 import pico.erp.user.UserId
 import spock.lang.Specification
 
@@ -52,7 +54,12 @@ class ProductionRequestServiceSpec extends Specification {
 
   def projectId = ProjectId.from("sample-project1")
 
-  ProductSpecificationId productSpecificationId = ProductSpecificationId.from("toothbrush-0")
+  def receiverId = CompanyId.from("SUPP2")
+
+  def productSpecificationId = ProductSpecificationId.from("toothbrush-0")
+
+  def unit = UnitKind.EA
+
 
   def setup() {
     requestService.create(
@@ -64,7 +71,9 @@ class ProductionRequestServiceSpec extends Specification {
         spareQuantity: 10,
         dueDate: dueDate,
         projectId: projectId,
-        requesterId: requesterId
+        requesterId: requesterId,
+        receiverId: receiverId,
+        unit: unit
       )
     )
     productSpecificationService.draft(
@@ -91,7 +100,9 @@ class ProductionRequestServiceSpec extends Specification {
         quantity: 100,
         spareQuantity: 5,
         dueDate: dueDate,
-        projectId: projectId
+        projectId: projectId,
+        receiverId: receiverId,
+        unit: unit
       )
     )
   }

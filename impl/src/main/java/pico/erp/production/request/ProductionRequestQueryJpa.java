@@ -57,7 +57,8 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
       productionRequest.accepterId,
       productionRequest.acceptedDate,
       productionRequest.completedDate,
-      productionRequest.receiverId
+      productionRequest.receiverId,
+      productionRequest.unit
     );
     query.select(select);
     query.from(productionRequest);
@@ -109,7 +110,9 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
       productionRequest.asap,
       productionRequest.projectId,
       productionRequest.committerId,
-      productionRequest.committedDate
+      productionRequest.committedDate,
+      productionRequest.receiverId,
+      productionRequest.unit
     );
     query.select(select);
     query.from(productionRequest);

@@ -8,3 +8,4 @@ data:
     project-id: sample-project1
     requester-id: kjh
     receiver-id: SUPP2
+    unit: EA

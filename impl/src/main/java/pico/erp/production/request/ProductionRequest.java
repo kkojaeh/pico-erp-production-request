@@ -23,6 +23,7 @@ import pico.erp.product.specification.ProductSpecificationStatusKind;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.request.ProductionRequestExceptions.CannotUpdateException;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.user.UserId;
 
 /**
@@ -82,6 +83,8 @@ public class ProductionRequest implements Serializable {
 
   CompanyId receiverId;
 
+  UnitKind unit;
+
   public ProductionRequest() {
 
   }
@@ -99,6 +102,8 @@ public class ProductionRequest implements Serializable {
     this.orderAcceptanceId = request.getOrderAcceptanceId();
     this.progressRate = BigDecimal.ZERO;
     this.requesterId = request.getRequesterId();
+    this.unit = request.getUnit();
+    this.receiverId = request.getReceiverId();
     this.code = request.getCodeGenerator().generate(this);
 
     return new ProductionRequestMessages.Create.Response(
@@ -117,6 +122,8 @@ public class ProductionRequest implements Serializable {
     this.dueDate = request.getDueDate();
     this.asap = request.isAsap();
     this.projectId = request.getProjectId();
+    this.unit = request.getUnit();
+    this.receiverId = request.getReceiverId();
 
     return new ProductionRequestMessages.Update.Response(
       Arrays.asList(new ProductionRequestEvents.UpdatedEvent(this.id))

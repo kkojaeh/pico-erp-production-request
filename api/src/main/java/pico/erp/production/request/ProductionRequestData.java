@@ -8,6 +8,7 @@ import pico.erp.item.ItemId;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
+import pico.erp.shared.data.UnitKind;
 import pico.erp.user.UserId;
 
 @Data
@@ -52,6 +53,8 @@ public class ProductionRequestData {
   OffsetDateTime completedDate;
 
   CompanyId receiverId;
+
+  UnitKind unit;
 
   boolean committable;
 
