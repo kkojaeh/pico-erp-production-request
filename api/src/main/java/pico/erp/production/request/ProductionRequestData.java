@@ -3,6 +3,7 @@ package pico.erp.production.request;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import lombok.Data;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.production.plan.ProductionPlanId;
@@ -49,6 +50,8 @@ public class ProductionRequestData {
   OffsetDateTime acceptedDate;
 
   OffsetDateTime completedDate;
+
+  CompanyId receiverId;
 
   boolean committable;
 

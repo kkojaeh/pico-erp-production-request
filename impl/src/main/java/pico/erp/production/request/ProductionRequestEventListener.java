@@ -26,32 +26,6 @@ public class ProductionRequestEventListener {
   @Autowired
   private ProductionPlanService productionPlanService;
 
-  @EventListener
-  @JmsListener(destination = LISTENER_NAME + "."
-    + ProductionRequestEvents.AcceptedEvent.CHANNEL)
-  public void onProductionRequestAccepted(ProductionRequestEvents.AcceptedEvent event) {
-    val request = productionRequestService.get(event.getProductionRequestId());
-
-    val planId = ProductionPlanId.generate();
-    productionPlanService.create(
-      ProductionPlanRequests.CreateRequest.builder()
-        .id(planId)
-        .itemId(request.getItemId())
-        .projectId(request.getProjectId())
-        .quantity(request.getQuantity())
-        .spareQuantity(request.getSpareQuantity())
-        .dueDate(request.getDueDate())
-        .build()
-    );
-
-    productionRequestService.plan(
-      ProductionRequestRequests.PlanRequest.builder()
-        .id(event.getProductionRequestId())
-        .planId(planId)
-        .build()
-    );
-  }
-
   /**
    * 생산 계획이 취소되면 생산 요청도 취소됨
    */
@@ -59,9 +33,9 @@ public class ProductionRequestEventListener {
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanEvents.CanceledEvent.CHANNEL)
   public void onProductionPlanCanceled(ProductionPlanEvents.CanceledEvent event) {
-    val exists = productionRequestService.exists(event.getProductionPlanId());
+    val exists = productionRequestService.exists(event.getId());
     if (exists) {
-      val request = productionRequestService.get(event.getProductionPlanId());
+      val request = productionRequestService.get(event.getId());
       if (request.isCancelable()) {
         productionRequestService.cancel(
           ProductionRequestRequests.CancelRequest.builder()
@@ -79,7 +53,7 @@ public class ProductionRequestEventListener {
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanEvents.CompletedEvent.CHANNEL)
   public void onProductionPlanCompleted(ProductionPlanEvents.CompletedEvent event) {
-    val planId = event.getProductionPlanId();
+    val planId = event.getId();
     val exists = productionRequestService.exists(planId);
     if (exists) {
       val request = productionRequestService.get(planId);
@@ -100,9 +74,9 @@ public class ProductionRequestEventListener {
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanEvents.DeterminedEvent.CHANNEL)
   public void onProductionPlanDetermined(ProductionPlanEvents.DeterminedEvent event) {
-    val exists = productionRequestService.exists(event.getProductionPlanId());
+    val exists = productionRequestService.exists(event.getId());
     if (exists) {
-      val request = productionRequestService.get(event.getProductionPlanId());
+      val request = productionRequestService.get(event.getId());
       if (request.isProgressable()) {
         productionRequestService.progress(
           ProductionRequestRequests.ProgressRequest.builder()
@@ -121,7 +95,7 @@ public class ProductionRequestEventListener {
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionPlanEvents.ProgressedEvent.CHANNEL)
   public void onProductionPlanProgressed(ProductionPlanEvents.ProgressedEvent event) {
-    val plan = productionPlanService.get(event.getProductionPlanId());
+    val plan = productionPlanService.get(event.getId());
     val exists = productionRequestService.exists(plan.getId());
     if (exists) {
       val request = productionRequestService.get(plan.getId());
@@ -136,6 +110,33 @@ public class ProductionRequestEventListener {
     }
   }
 
+  @EventListener
+  @JmsListener(destination = LISTENER_NAME + "."
+    + ProductionRequestEvents.AcceptedEvent.CHANNEL)
+  public void onProductionRequestAccepted(ProductionRequestEvents.AcceptedEvent event) {
+    val request = productionRequestService.get(event.getId());
+
+    val planId = ProductionPlanId.generate();
+    productionPlanService.create(
+      ProductionPlanRequests.CreateRequest.builder()
+        .id(planId)
+        .itemId(request.getItemId())
+        .projectId(request.getProjectId())
+        .quantity(request.getQuantity())
+        .spareQuantity(request.getSpareQuantity())
+        .dueDate(request.getDueDate())
+        .receiverId(request.getReceiverId())
+        .build()
+    );
+
+    productionRequestService.plan(
+      ProductionRequestRequests.PlanRequest.builder()
+        .id(event.getId())
+        .planId(planId)
+        .build()
+    );
+  }
+
   /**
    * 생산 요청이 취소되면 계획도 취소시킴
    */
@@ -143,9 +144,9 @@ public class ProductionRequestEventListener {
   @JmsListener(destination = LISTENER_NAME + "."
     + ProductionRequestEvents.CanceledEvent.CHANNEL)
   public void onProductionRequestCanceled(ProductionRequestEvents.CanceledEvent event) {
-    val exists = productionRequestService.exists(event.getProductionRequestId());
+    val exists = productionRequestService.exists(event.getId());
     if (exists) {
-      val request = productionRequestService.get(event.getProductionRequestId());
+      val request = productionRequestService.get(event.getId());
       if (request.getPlanId() != null) {
         val plan = productionPlanService.get(request.getPlanId());
         if (plan.isCancelable()) {

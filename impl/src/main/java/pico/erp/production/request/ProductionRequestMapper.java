@@ -134,45 +134,50 @@ public abstract class ProductionRequestMapper {
     }
   }
 
+  protected BomData bom(ProductionRequestId requestId) {
+    return bom(map(requestId).getItemId());
+  }
+
+  protected ItemData item(ProductionRequestId requestId) {
+    return map(map(requestId).getItemId());
+  }
+
+  public ProductionRequest jpa(ProductionRequestEntity entity) {
+    return ProductionRequest.builder()
+      .id(entity.getId())
+      .code(entity.getCode())
+      .itemId(entity.getItemId())
+      .quantity(entity.getQuantity())
+      .spareQuantity(entity.getSpareQuantity())
+      .dueDate(entity.getDueDate())
+      .asap(entity.isAsap())
+      .projectId(entity.getProjectId())
+      .status(entity.getStatus())
+      .committerId(entity.getCommitterId())
+      .committedDate(entity.getCommittedDate())
+      .cancelerId(entity.getCancelerId())
+      .canceledDate(entity.getCanceledDate())
+      .accepterId(entity.getAccepterId())
+      .acceptedDate(entity.getAcceptedDate())
+      .requesterId(entity.getRequesterId())
+      .planId(entity.getPlanId())
+      .completedDate(entity.getCompletedDate())
+      .receiverId(entity.getReceiverId())
+      .build();
+  }
+
   @Mappings({
+    @Mapping(target = "item", source = "id"),
     @Mapping(target = "bom", source = "id"),
-    @Mapping(target = "productSpecification", source = "id"),
-    @Mapping(target = "accepter", source = "accepterId")
+    @Mapping(target = "productSpecification", source = "id")
   })
   public abstract ProductionRequestMessages.Accept.Request map(
     ProductionRequestRequests.AcceptRequest request);
 
-  protected BomData bom(ProductionRequestId requestId) {
-    return bom(map(requestId).getItem().getId());
-  }
-
-  protected ProductSpecificationData spec(ProductionRequestId requestId) {
-    return spec(map(requestId).getItem().getId());
-  }
-
-
-
-  @Mappings({
-    @Mapping(target = "itemId", source = "item.id"),
-    @Mapping(target = "planId", source = "plan.id"),
-    @Mapping(target = "committerId", source = "committer.id"),
-    @Mapping(target = "cancelerId", source = "canceler.id"),
-    @Mapping(target = "accepterId", source = "accepter.id"),
-    @Mapping(target = "requesterId", source = "requester.id"),
-    @Mapping(target = "orderAcceptanceId", source = "orderAcceptance.id"),
-    @Mapping(target = "projectId", source = "project.id")
-  })
   public abstract ProductionRequestData map(ProductionRequest domain);
 
 
   @Mappings({
-    @Mapping(target = "planId", source = "plan.id"),
-    @Mapping(target = "projectId", source = "project.id"),
-    @Mapping(target = "itemId", source = "item.id"),
-    @Mapping(target = "requesterId", source = "requester.id"),
-    @Mapping(target = "committerId", source = "committer.id"),
-    @Mapping(target = "cancelerId", source = "canceler.id"),
-    @Mapping(target = "accepterId", source = "accepter.id"),
     @Mapping(target = "createdBy", ignore = true),
     @Mapping(target = "createdDate", ignore = true),
     @Mapping(target = "lastModifiedBy", ignore = true),
@@ -180,27 +185,8 @@ public abstract class ProductionRequestMapper {
   })
   public abstract ProductionRequestEntity jpa(ProductionRequest data);
 
-  public ProductionRequest jpa(ProductionRequestEntity entity) {
-    return ProductionRequest.builder()
-      .id(entity.getId())
-      .code(entity.getCode())
-      .item(map(entity.getItemId()))
-      .quantity(entity.getQuantity())
-      .spareQuantity(entity.getSpareQuantity())
-      .dueDate(entity.getDueDate())
-      .asap(entity.isAsap())
-      .project(map(entity.getProjectId()))
-      .status(entity.getStatus())
-      .committer(map(entity.getCommitterId()))
-      .committedDate(entity.getCommittedDate())
-      .canceler(map(entity.getCancelerId()))
-      .canceledDate(entity.getCanceledDate())
-      .accepter(map(entity.getAccepterId()))
-      .acceptedDate(entity.getAcceptedDate())
-      .requester(map(entity.getRequesterId()))
-      .plan(map(entity.getPlanId()))
-      .completedDate(entity.getCompletedDate())
-      .build();
+  protected ProductSpecificationData spec(ProductionRequestId requestId) {
+    return spec(map(requestId).getItemId());
   }
 
   protected ProductSpecificationData spec(ItemId itemId) {
@@ -215,13 +201,11 @@ public abstract class ProductionRequestMapper {
   }
 
   @Mappings({
-    @Mapping(target = "committer", source = "committerId")
   })
   public abstract ProductionRequestMessages.Commit.Request map(
     ProductionRequestRequests.CommitRequest request);
 
   @Mappings({
-    @Mapping(target = "canceler", source = "cancelerId")
   })
   public abstract ProductionRequestMessages.Cancel.Request map(
     ProductionRequestRequests.CancelRequest request);
@@ -237,24 +221,17 @@ public abstract class ProductionRequestMapper {
     ProductionRequestRequests.CompleteRequest request);
 
   @Mappings({
-    @Mapping(target = "plan", source = "planId")
   })
   public abstract ProductionRequestMessages.Plan.Request map(
     ProductionRequestRequests.PlanRequest request);
 
   @Mappings({
-    @Mapping(target = "requester", source = "requesterId"),
-    @Mapping(target = "item", source = "itemId"),
-    @Mapping(target = "project", source = "projectId"),
-    @Mapping(target = "orderAcceptance", source = "orderAcceptanceId"),
     @Mapping(target = "codeGenerator", expression = "java(productionRequestCodeGenerator)")
   })
   public abstract ProductionRequestMessages.Create.Request map(
     ProductionRequestRequests.CreateRequest request);
 
   @Mappings({
-    @Mapping(target = "item", source = "itemId"),
-    @Mapping(target = "project", source = "projectId")
   })
   public abstract ProductionRequestMessages.Update.Request map(
     ProductionRequestRequests.UpdateRequest request);

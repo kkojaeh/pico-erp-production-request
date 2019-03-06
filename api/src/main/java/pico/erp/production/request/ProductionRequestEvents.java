@@ -15,7 +15,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.created";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -30,7 +30,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.deleted";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -45,7 +45,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.updated";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -60,7 +60,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.committed";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -75,7 +75,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.accepted";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -90,7 +90,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.canceled";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -105,7 +105,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.progressed";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     private BigDecimal progressRate;
 
@@ -122,7 +122,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.completed";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;
@@ -137,7 +137,7 @@ public interface ProductionRequestEvents {
 
     public final static String CHANNEL = "event.production-request.planned";
 
-    private ProductionRequestId productionRequestId;
+    private ProductionRequestId id;
 
     public String channel() {
       return CHANNEL;

@@ -11,13 +11,15 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Value;
 import pico.erp.bom.BomData;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemData;
-import pico.erp.order.acceptance.OrderAcceptanceData;
+import pico.erp.item.ItemId;
+import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.product.specification.ProductSpecificationData;
-import pico.erp.production.plan.ProductionPlanData;
-import pico.erp.project.ProjectData;
+import pico.erp.production.plan.ProductionPlanId;
+import pico.erp.project.ProjectId;
 import pico.erp.shared.event.Event;
-import pico.erp.user.UserData;
+import pico.erp.user.UserId;
 
 public interface ProductionRequestMessages {
 
@@ -32,7 +34,7 @@ public interface ProductionRequestMessages {
 
       @Valid
       @NotNull
-      ItemData item;
+      ItemId itemId;
 
       @NotNull
       @Min(0)
@@ -48,17 +50,23 @@ public interface ProductionRequestMessages {
 
       boolean asap;
 
+      @Valid
       @NotNull
-      ProjectData project;
+      ProjectId projectId;
 
       @NotNull
       ProductionRequestCodeGenerator codeGenerator;
 
       @Valid
-      OrderAcceptanceData orderAcceptance;
+      OrderAcceptanceId orderAcceptanceId;
 
+      @Valid
       @NotNull
-      UserData requester;
+      UserId requesterId;
+
+      @Valid
+      @NotNull
+      CompanyId receiverId;
 
     }
 
@@ -78,7 +86,7 @@ public interface ProductionRequestMessages {
 
       @Valid
       @NotNull
-      ItemData item;
+      ItemId itemId;
 
       @NotNull
       @Min(0)
@@ -95,7 +103,11 @@ public interface ProductionRequestMessages {
       boolean asap;
 
       @NotNull
-      ProjectData project;
+      ProjectId projectId;
+
+      @Valid
+      @NotNull
+      CompanyId receiverId;
 
     }
 
@@ -137,7 +149,7 @@ public interface ProductionRequestMessages {
 
       @Valid
       @NotNull
-      ProductionPlanData plan;
+      ProductionPlanId planId;
 
     }
 
@@ -156,7 +168,7 @@ public interface ProductionRequestMessages {
     class Request {
 
       @NotNull
-      UserData committer;
+      UserId committerId;
 
     }
 
@@ -174,12 +186,15 @@ public interface ProductionRequestMessages {
     @Data
     class Request {
 
+      @NotNull
+      ItemData item;
+
       BomData bom;
 
       ProductSpecificationData productSpecification;
 
       @NotNull
-      UserData accepter;
+      UserId accepterId;
 
     }
 
@@ -198,7 +213,7 @@ public interface ProductionRequestMessages {
     class Request {
 
       @NotNull
-      UserData canceler;
+      UserId cancelerId;
 
     }
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.project.ProjectId;
 import pico.erp.user.UserId;
@@ -32,6 +33,8 @@ public class ProductionRequestAwaitAcceptView {
   UserId committerId;
 
   OffsetDateTime committedDate;
+
+  CompanyId receiverId;
 
   @Data
   @NoArgsConstructor

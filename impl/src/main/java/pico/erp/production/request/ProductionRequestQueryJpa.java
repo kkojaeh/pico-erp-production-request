@@ -56,7 +56,8 @@ public class ProductionRequestQueryJpa implements ProductionRequestQuery {
       productionRequest.canceledDate,
       productionRequest.accepterId,
       productionRequest.acceptedDate,
-      productionRequest.completedDate
+      productionRequest.completedDate,
+      productionRequest.receiverId
     );
     query.select(select);
     query.from(productionRequest);

@@ -15,14 +15,15 @@ import lombok.experimental.FieldDefaults;
 import lombok.val;
 import pico.erp.audit.annotation.Audit;
 import pico.erp.bom.BomStatusKind;
-import pico.erp.item.ItemData;
+import pico.erp.company.CompanyId;
+import pico.erp.item.ItemId;
 import pico.erp.item.ItemStatusKind;
-import pico.erp.order.acceptance.OrderAcceptanceData;
+import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.product.specification.ProductSpecificationStatusKind;
-import pico.erp.production.plan.ProductionPlanData;
+import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.request.ProductionRequestExceptions.CannotUpdateException;
-import pico.erp.project.ProjectData;
-import pico.erp.user.UserData;
+import pico.erp.project.ProjectId;
+import pico.erp.user.UserId;
 
 /**
  * 주문 접수
@@ -43,7 +44,7 @@ public class ProductionRequest implements Serializable {
 
   ProductionRequestCode code;
 
-  ItemData item;
+  ItemId itemId;
 
   BigDecimal quantity;
 
@@ -53,31 +54,33 @@ public class ProductionRequest implements Serializable {
 
   boolean asap;
 
-  ProjectData project;
+  ProjectId projectId;
 
   BigDecimal progressRate;
 
-  OrderAcceptanceData orderAcceptance;
+  OrderAcceptanceId orderAcceptanceId;
 
   ProductionRequestStatusKind status;
 
-  UserData requester;
+  UserId requesterId;
 
-  UserData committer;
+  UserId committerId;
 
   OffsetDateTime committedDate;
 
-  UserData canceler;
+  UserId cancelerId;
 
   OffsetDateTime canceledDate;
 
-  UserData accepter;
+  UserId accepterId;
 
   OffsetDateTime acceptedDate;
 
   OffsetDateTime completedDate;
 
-  ProductionPlanData plan;
+  ProductionPlanId planId;
+
+  CompanyId receiverId;
 
   public ProductionRequest() {
 
@@ -86,16 +89,16 @@ public class ProductionRequest implements Serializable {
   public ProductionRequestMessages.Create.Response apply(
     ProductionRequestMessages.Create.Request request) {
     this.id = request.getId();
-    this.item = request.getItem();
+    this.itemId = request.getItemId();
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
     this.dueDate = request.getDueDate();
     this.asap = request.isAsap();
-    this.project = request.getProject();
+    this.projectId = request.getProjectId();
     this.status = ProductionRequestStatusKind.CREATED;
-    this.orderAcceptance = request.getOrderAcceptance();
+    this.orderAcceptanceId = request.getOrderAcceptanceId();
     this.progressRate = BigDecimal.ZERO;
-    this.requester = request.getRequester();
+    this.requesterId = request.getRequesterId();
     this.code = request.getCodeGenerator().generate(this);
 
     return new ProductionRequestMessages.Create.Response(
@@ -108,12 +111,12 @@ public class ProductionRequest implements Serializable {
     if (!isUpdatable()) {
       throw new CannotUpdateException();
     }
-    this.item = request.getItem();
+    this.itemId = request.getItemId();
     this.quantity = request.getQuantity();
     this.spareQuantity = request.getSpareQuantity();
     this.dueDate = request.getDueDate();
     this.asap = request.isAsap();
-    this.project = request.getProject();
+    this.projectId = request.getProjectId();
 
     return new ProductionRequestMessages.Update.Response(
       Arrays.asList(new ProductionRequestEvents.UpdatedEvent(this.id))
@@ -146,11 +149,11 @@ public class ProductionRequest implements Serializable {
 
   public ProductionRequestMessages.Commit.Response apply(
     ProductionRequestMessages.Commit.Request request) {
-    if (!isCommittable() || !requester.equals(request.getCommitter())) {
+    if (!isCommittable() || !requesterId.equals(request.getCommitterId())) {
       throw new ProductionRequestExceptions.CannotCommitException();
     }
     status = ProductionRequestStatusKind.COMMITTED;
-    committer = request.getCommitter();
+    committerId = request.getCommitterId();
     committedDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Commit.Response(
       Arrays.asList(new ProductionRequestEvents.CommittedEvent(this.id))
@@ -162,6 +165,7 @@ public class ProductionRequest implements Serializable {
     if (!isAcceptable()) {
       throw new ProductionRequestExceptions.CannotAcceptException();
     }
+    val item = request.getItem();
     val bom = request.getBom();
     val productSpecification = request.getProductSpecification();
     if (item.getStatus() != ItemStatusKind.ACTIVATED) {
@@ -175,7 +179,7 @@ public class ProductionRequest implements Serializable {
       throw new ProductionRequestExceptions.CannotAcceptProductSpecificationNotCommittedException();
     }
     status = ProductionRequestStatusKind.ACCEPTED;
-    accepter = request.getAccepter();
+    accepterId = request.getAccepterId();
     acceptedDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Accept.Response(
       Arrays.asList(new ProductionRequestEvents.AcceptedEvent(this.id))
@@ -187,7 +191,7 @@ public class ProductionRequest implements Serializable {
     if (!isPlannable()) {
       throw new ProductionRequestExceptions.CannotPlanException();
     }
-    plan = request.getPlan();
+    planId = request.getPlanId();
     status = ProductionRequestStatusKind.IN_PLANNING;
     return new ProductionRequestMessages.Plan.Response(
       Arrays.asList(new ProductionRequestEvents.PlannedEvent(this.id))
@@ -200,7 +204,7 @@ public class ProductionRequest implements Serializable {
       throw new ProductionRequestExceptions.CannotCancelException();
     }
     status = ProductionRequestStatusKind.CANCELED;
-    canceler = request.getCanceler();
+    cancelerId = request.getCancelerId();
     canceledDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Cancel.Response(
       Arrays.asList(new ProductionRequestEvents.CanceledEvent(this.id))

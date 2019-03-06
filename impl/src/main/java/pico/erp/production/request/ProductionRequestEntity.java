@@ -28,6 +28,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.project.ProjectId;
@@ -149,5 +150,10 @@ public class ProductionRequestEntity implements Serializable {
   OffsetDateTime acceptedDate;
 
   OffsetDateTime completedDate;
+
+  @AttributeOverrides({
+    @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
+  })
+  CompanyId receiverId;
 
 }

@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
 import pico.erp.order.acceptance.OrderAcceptanceId;
 import pico.erp.production.plan.ProductionPlanId;
@@ -58,6 +59,10 @@ public interface ProductionRequestRequests {
     @NotNull
     UserId requesterId;
 
+    @Valid
+    @NotNull
+    CompanyId receiverId;
+
 
   }
 
@@ -91,6 +96,10 @@ public interface ProductionRequestRequests {
 
     @NotNull
     ProjectId projectId;
+
+    @Valid
+    @NotNull
+    CompanyId receiverId;
 
   }
 
