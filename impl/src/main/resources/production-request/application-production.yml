@@ -15,3 +15,4 @@ flyway:
   table: flyway_schema_history_production_request
   encoding: UTF-8
   baseline-on-migrate: true
+  enabled: true

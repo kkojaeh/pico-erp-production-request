@@ -14,6 +14,7 @@ import pico.erp.company.CompanyApi;
 import pico.erp.item.ItemApi;
 import pico.erp.order.acceptance.OrderAcceptanceApi;
 import pico.erp.process.ProcessApi;
+import pico.erp.product.specification.ProductSpecificationApi;
 import pico.erp.production.plan.ProductionPlanApi;
 import pico.erp.production.request.ProductionRequestApi.Roles;
 import pico.erp.project.ProjectApi;
@@ -59,7 +60,8 @@ public class ProductionRequestApplication implements ApplicationStarter {
       ProjectApi.ID,
       OrderAcceptanceApi.ID,
       ProductionPlanApi.ID,
-      ProcessApi.ID
+      ProcessApi.ID,
+      ProductSpecificationApi.ID
     ).collect(Collectors.toSet());
   }
 
