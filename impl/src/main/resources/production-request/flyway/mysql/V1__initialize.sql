@@ -21,6 +21,7 @@ create table prr_production_request (
 	project_id binary(16),
 	quantity decimal(19,2),
 	requester_id varchar(50),
+	receiver_id varchar(50),
 	spare_quantity decimal(19,2),
 	status varchar(20),
 	primary key (id)
