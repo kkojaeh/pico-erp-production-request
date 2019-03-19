@@ -15,21 +15,14 @@ public class ProductionRequestCodeGeneratorImpl implements ProductionRequestCode
   @Autowired
   private ProductionRequestRepository productionRequestRepository;
 
-  public static String toAlphabeticRadix(int num) {
-    char[] str = Integer.toString(num, 26).toCharArray();
-    for (int i = 0; i < str.length; i++) {
-      str[i] += str[i] > '9' ? 10 : 49;
-    }
-    return new String(str).toUpperCase();
-  }
-
   @Override
   public ProductionRequestCode generate(ProductionRequest productionRequest) {
     val now = OffsetDateTime.now();
     val begin = now.with(TemporalAdjusters.firstDayOfMonth()).with(LocalTime.MIN);
     val end = now.with(TemporalAdjusters.lastDayOfMonth()).with(LocalTime.MAX);
     val count = productionRequestRepository.countCreatedBetween(begin, end);
-    val code = String.format("%04d%02d-%04d", now.getYear(), now.getMonthValue(), count + 1)
+    val code = String
+      .format("PRR%03d%02d-%04d", now.getYear() % 1000, now.getMonthValue(), count + 1)
       .toUpperCase();
     return ProductionRequestCode.from(code);
   }
