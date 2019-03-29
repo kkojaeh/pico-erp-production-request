@@ -1,32 +1,45 @@
 package pico.erp.production.request
 
+import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
+import pico.erp.attachment.AttachmentApplication
+import pico.erp.bom.BomApplication
+import pico.erp.company.CompanyApplication
 import pico.erp.company.CompanyId
+import pico.erp.document.DocumentApplication
+import pico.erp.item.ItemApplication
 import pico.erp.item.ItemId
+import pico.erp.order.acceptance.OrderAcceptanceApplication
+import pico.erp.process.ProcessApplication
+import pico.erp.product.specification.ProductSpecificationApplication
 import pico.erp.product.specification.ProductSpecificationId
 import pico.erp.product.specification.ProductSpecificationRequests
 import pico.erp.product.specification.ProductSpecificationService
+import pico.erp.production.plan.ProductionPlanApplication
+import pico.erp.project.ProjectApplication
 import pico.erp.project.ProjectId
-import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.TestParentApplication
 import pico.erp.shared.data.UnitKind
+import pico.erp.user.UserApplication
 import pico.erp.user.UserId
 import spock.lang.Specification
 
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
-@SpringBootTest(classes = [IntegrationConfiguration])
+@SpringBootTest(classes = [ProductionRequestApplication, TestConfig])
+@SpringBootTestComponent(parent = TestParentApplication, siblings = [
+  UserApplication, ItemApplication, ProjectApplication, ProcessApplication, CompanyApplication, BomApplication,
+  OrderAcceptanceApplication, ProductionPlanApplication, ProductSpecificationApplication, DocumentApplication,
+  AttachmentApplication
+])
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-@Configuration
-@ComponentScan("pico.erp.config")
 class ProductionRequestServiceSpec extends Specification {
 
   @Autowired
@@ -42,7 +55,7 @@ class ProductionRequestServiceSpec extends Specification {
 
   def itemId = ItemId.from("toothbrush-0")
 
-  def dueDate = OffsetDateTime.now().plusDays(7)
+  def dueDate = LocalDateTime.now().plusDays(7)
 
   def committerId = UserId.from("kjh")
 

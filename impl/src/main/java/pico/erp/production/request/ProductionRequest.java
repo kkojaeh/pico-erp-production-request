@@ -2,7 +2,7 @@ package pico.erp.production.request;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import javax.persistence.Id;
 import lombok.AccessLevel;
@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import lombok.val;
-import pico.erp.audit.annotation.Audit;
 import pico.erp.bom.BomStatusKind;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
@@ -35,7 +34,6 @@ import pico.erp.user.UserId;
 @EqualsAndHashCode(of = "id")
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Audit(alias = "production-request")
 public class ProductionRequest implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -51,7 +49,7 @@ public class ProductionRequest implements Serializable {
 
   BigDecimal spareQuantity;
 
-  OffsetDateTime dueDate;
+  LocalDateTime dueDate;
 
   boolean asap;
 
@@ -67,17 +65,17 @@ public class ProductionRequest implements Serializable {
 
   UserId committerId;
 
-  OffsetDateTime committedDate;
+  LocalDateTime committedDate;
 
   UserId cancelerId;
 
-  OffsetDateTime canceledDate;
+  LocalDateTime canceledDate;
 
   UserId accepterId;
 
-  OffsetDateTime acceptedDate;
+  LocalDateTime acceptedDate;
 
-  OffsetDateTime completedDate;
+  LocalDateTime completedDate;
 
   ProductionPlanId planId;
 
@@ -148,7 +146,7 @@ public class ProductionRequest implements Serializable {
       throw new ProductionRequestExceptions.CannotCompleteException();
     }
     this.status = ProductionRequestStatusKind.COMPLETED;
-    this.completedDate = OffsetDateTime.now();
+    this.completedDate = LocalDateTime.now();
     return new ProductionRequestMessages.Complete.Response(
       Arrays.asList(new ProductionRequestEvents.CompletedEvent(this.id))
     );
@@ -161,7 +159,7 @@ public class ProductionRequest implements Serializable {
     }
     status = ProductionRequestStatusKind.COMMITTED;
     committerId = request.getCommitterId();
-    committedDate = OffsetDateTime.now();
+    committedDate = LocalDateTime.now();
     return new ProductionRequestMessages.Commit.Response(
       Arrays.asList(new ProductionRequestEvents.CommittedEvent(this.id))
     );
@@ -187,7 +185,7 @@ public class ProductionRequest implements Serializable {
     }
     status = ProductionRequestStatusKind.ACCEPTED;
     accepterId = request.getAccepterId();
-    acceptedDate = OffsetDateTime.now();
+    acceptedDate = LocalDateTime.now();
     return new ProductionRequestMessages.Accept.Response(
       Arrays.asList(new ProductionRequestEvents.AcceptedEvent(this.id))
     );
@@ -212,7 +210,7 @@ public class ProductionRequest implements Serializable {
     }
     status = ProductionRequestStatusKind.CANCELED;
     cancelerId = request.getCancelerId();
-    canceledDate = OffsetDateTime.now();
+    canceledDate = LocalDateTime.now();
     return new ProductionRequestMessages.Cancel.Response(
       Arrays.asList(new ProductionRequestEvents.CanceledEvent(this.id))
     );
