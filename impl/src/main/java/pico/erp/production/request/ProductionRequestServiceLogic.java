@@ -1,23 +1,21 @@
 package pico.erp.production.request;
 
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.audit.AuditService;
 import pico.erp.production.plan.ProductionPlanId;
 import pico.erp.production.request.ProductionRequestRequests.CancelRequest;
 import pico.erp.production.request.ProductionRequestRequests.CompleteRequest;
 import pico.erp.production.request.ProductionRequestRequests.PlanRequest;
 import pico.erp.production.request.ProductionRequestRequests.ProgressRequest;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@ComponentBean
 @Transactional
 @Validated
 public class ProductionRequestServiceLogic implements ProductionRequestService {
@@ -31,17 +29,12 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
   @Autowired
   private ProductionRequestMapper mapper;
 
-  @Lazy
-  @Autowired
-  private AuditService auditService;
-
   @Override
   public void commit(ProductionRequestRequests.CommitRequest request) {
     val productionRequest = productionRequestRepository.findBy(request.getId())
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -51,7 +44,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -63,7 +55,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       throw new ProductionRequestExceptions.AlreadyExistsException();
     }
     val created = productionRequestRepository.create(productionRequest);
-    auditService.commit(created);
     eventPublisher.publishEvents(response.getEvents());
     return mapper.map(created);
   }
@@ -74,7 +65,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -108,7 +98,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -118,7 +107,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -128,7 +116,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 
@@ -138,7 +125,6 @@ public class ProductionRequestServiceLogic implements ProductionRequestService {
       .orElseThrow(ProductionRequestExceptions.NotFoundException::new);
     val response = productionRequest.apply(mapper.map(request));
     productionRequestRepository.update(productionRequest);
-    auditService.commit(productionRequest);
     eventPublisher.publishEvents(response.getEvents());
   }
 }

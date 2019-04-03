@@ -1,9 +1,8 @@
 package pico.erp.production.request
 
+import kkojaeh.spring.boot.component.SpringBootTestComponent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
@@ -14,19 +13,19 @@ import pico.erp.product.specification.ProductSpecificationId
 import pico.erp.product.specification.ProductSpecificationRequests
 import pico.erp.product.specification.ProductSpecificationService
 import pico.erp.project.ProjectId
-import pico.erp.shared.IntegrationConfiguration
+import pico.erp.shared.ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier
+import pico.erp.shared.TestParentApplication
 import pico.erp.shared.data.UnitKind
 import pico.erp.user.UserId
 import spock.lang.Specification
 
-import java.time.OffsetDateTime
+import java.time.LocalDateTime
 
-@SpringBootTest(classes = [IntegrationConfiguration])
+@SpringBootTest(classes = [ProductionRequestApplication, TestConfig])
+@SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
 @Transactional
 @Rollback
 @ActiveProfiles("test")
-@Configuration
-@ComponentScan("pico.erp.config")
 class ProductionRequestServiceSpec extends Specification {
 
   @Autowired
@@ -42,7 +41,7 @@ class ProductionRequestServiceSpec extends Specification {
 
   def itemId = ItemId.from("toothbrush-0")
 
-  def dueDate = OffsetDateTime.now().plusDays(7)
+  def dueDate = LocalDateTime.now().plusDays(7)
 
   def committerId = UserId.from("kjh")
 

@@ -3,7 +3,7 @@ package pico.erp.production.request;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -75,7 +75,7 @@ public class ProductionRequestEntity implements Serializable {
   @Column(precision = 19, scale = 2)
   BigDecimal spareQuantity;
 
-  OffsetDateTime dueDate;
+  LocalDateTime dueDate;
 
   boolean asap;
 
@@ -99,7 +99,7 @@ public class ProductionRequestEntity implements Serializable {
 
   @CreatedDate
   @Column(updatable = false)
-  OffsetDateTime createdDate;
+  LocalDateTime createdDate;
 
   @Embedded
   @AttributeOverrides({
@@ -110,7 +110,7 @@ public class ProductionRequestEntity implements Serializable {
   Auditor lastModifiedBy;
 
   @LastModifiedDate
-  OffsetDateTime lastModifiedDate;
+  LocalDateTime lastModifiedDate;
 
   @Embedded
   @AttributeOverrides({
@@ -125,7 +125,7 @@ public class ProductionRequestEntity implements Serializable {
   UserId committerId;
 
   @Column
-  OffsetDateTime committedDate;
+  LocalDateTime committedDate;
 
   @Embedded
   @AttributeOverrides({
@@ -134,7 +134,7 @@ public class ProductionRequestEntity implements Serializable {
   UserId cancelerId;
 
   @Column
-  OffsetDateTime canceledDate;
+  LocalDateTime canceledDate;
 
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "PLAN_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
@@ -148,9 +148,9 @@ public class ProductionRequestEntity implements Serializable {
   UserId accepterId;
 
   @Column
-  OffsetDateTime acceptedDate;
+  LocalDateTime acceptedDate;
 
-  OffsetDateTime completedDate;
+  LocalDateTime completedDate;
 
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
