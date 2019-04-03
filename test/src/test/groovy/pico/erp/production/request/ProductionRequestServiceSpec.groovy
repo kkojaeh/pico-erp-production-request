@@ -7,36 +7,22 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
-import pico.erp.attachment.AttachmentApplication
-import pico.erp.bom.BomApplication
-import pico.erp.company.CompanyApplication
 import pico.erp.company.CompanyId
-import pico.erp.document.DocumentApplication
-import pico.erp.item.ItemApplication
 import pico.erp.item.ItemId
-import pico.erp.order.acceptance.OrderAcceptanceApplication
-import pico.erp.process.ProcessApplication
-import pico.erp.product.specification.ProductSpecificationApplication
 import pico.erp.product.specification.ProductSpecificationId
 import pico.erp.product.specification.ProductSpecificationRequests
 import pico.erp.product.specification.ProductSpecificationService
-import pico.erp.production.plan.ProductionPlanApplication
-import pico.erp.project.ProjectApplication
 import pico.erp.project.ProjectId
+import pico.erp.shared.ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier
 import pico.erp.shared.TestParentApplication
 import pico.erp.shared.data.UnitKind
-import pico.erp.user.UserApplication
 import pico.erp.user.UserId
 import spock.lang.Specification
 
 import java.time.LocalDateTime
 
 @SpringBootTest(classes = [ProductionRequestApplication, TestConfig])
-@SpringBootTestComponent(parent = TestParentApplication, siblings = [
-  UserApplication, ItemApplication, ProjectApplication, ProcessApplication, CompanyApplication, BomApplication,
-  OrderAcceptanceApplication, ProductionPlanApplication, ProductSpecificationApplication, DocumentApplication,
-  AttachmentApplication
-])
+@SpringBootTestComponent(parent = TestParentApplication, siblingsSupplier = ComponentDefinitionServiceLoaderTestComponentSiblingsSupplier.class)
 @Transactional
 @Rollback
 @ActiveProfiles("test")
