@@ -1,7 +1,7 @@
 package pico.erp.production.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import javax.validation.Valid;
 import javax.validation.constraints.Future;
@@ -47,7 +47,7 @@ public interface ProductionRequestMessages {
 
       @Future
       @NotNull
-      LocalDateTime dueDate;
+      OffsetDateTime dueDate;
 
       boolean asap;
 
@@ -102,7 +102,7 @@ public interface ProductionRequestMessages {
 
       @Future
       @NotNull
-      LocalDateTime dueDate;
+      OffsetDateTime dueDate;
 
       boolean asap;
 

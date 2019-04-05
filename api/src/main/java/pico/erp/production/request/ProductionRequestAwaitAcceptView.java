@@ -1,7 +1,7 @@
 package pico.erp.production.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class ProductionRequestAwaitAcceptView {
 
   ProductionRequestCode code;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
   BigDecimal quantity;
 
@@ -33,7 +33,7 @@ public class ProductionRequestAwaitAcceptView {
 
   UserId committerId;
 
-  LocalDateTime committedDate;
+  OffsetDateTime committedDate;
 
   CompanyId receiverId;
 
@@ -53,9 +53,9 @@ public class ProductionRequestAwaitAcceptView {
 
     UserId requesterId;
 
-    LocalDateTime startDueDate;
+    OffsetDateTime startDueDate;
 
-    LocalDateTime endDueDate;
+    OffsetDateTime endDueDate;
 
   }
 

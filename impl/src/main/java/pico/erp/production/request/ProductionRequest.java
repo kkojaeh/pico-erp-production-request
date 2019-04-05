@@ -2,7 +2,7 @@ package pico.erp.production.request;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import javax.persistence.Id;
 import lombok.AccessLevel;
@@ -49,7 +49,7 @@ public class ProductionRequest implements Serializable {
 
   BigDecimal spareQuantity;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
   boolean asap;
 
@@ -65,17 +65,17 @@ public class ProductionRequest implements Serializable {
 
   UserId committerId;
 
-  LocalDateTime committedDate;
+  OffsetDateTime committedDate;
 
   UserId cancelerId;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   UserId accepterId;
 
-  LocalDateTime acceptedDate;
+  OffsetDateTime acceptedDate;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
   ProductionPlanId planId;
 
@@ -146,7 +146,7 @@ public class ProductionRequest implements Serializable {
       throw new ProductionRequestExceptions.CannotCompleteException();
     }
     this.status = ProductionRequestStatusKind.COMPLETED;
-    this.completedDate = LocalDateTime.now();
+    this.completedDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Complete.Response(
       Arrays.asList(new ProductionRequestEvents.CompletedEvent(this.id))
     );
@@ -159,7 +159,7 @@ public class ProductionRequest implements Serializable {
     }
     status = ProductionRequestStatusKind.COMMITTED;
     committerId = request.getCommitterId();
-    committedDate = LocalDateTime.now();
+    committedDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Commit.Response(
       Arrays.asList(new ProductionRequestEvents.CommittedEvent(this.id))
     );
@@ -185,7 +185,7 @@ public class ProductionRequest implements Serializable {
     }
     status = ProductionRequestStatusKind.ACCEPTED;
     accepterId = request.getAccepterId();
-    acceptedDate = LocalDateTime.now();
+    acceptedDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Accept.Response(
       Arrays.asList(new ProductionRequestEvents.AcceptedEvent(this.id))
     );
@@ -210,7 +210,7 @@ public class ProductionRequest implements Serializable {
     }
     status = ProductionRequestStatusKind.CANCELED;
     cancelerId = request.getCancelerId();
-    canceledDate = LocalDateTime.now();
+    canceledDate = OffsetDateTime.now();
     return new ProductionRequestMessages.Cancel.Response(
       Arrays.asList(new ProductionRequestEvents.CanceledEvent(this.id))
     );

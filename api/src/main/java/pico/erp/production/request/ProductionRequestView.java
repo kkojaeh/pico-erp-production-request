@@ -1,7 +1,7 @@
 package pico.erp.production.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class ProductionRequestView {
 
   ProductionRequestCode code;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
   BigDecimal quantity;
 
@@ -39,21 +39,21 @@ public class ProductionRequestView {
 
   Auditor createdBy;
 
-  LocalDateTime createdDate;
+  OffsetDateTime createdDate;
 
   UserId committerId;
 
-  LocalDateTime committedDate;
+  OffsetDateTime committedDate;
 
   UserId cancelerId;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   UserId accepterId;
 
-  LocalDateTime acceptedDate;
+  OffsetDateTime acceptedDate;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
   CompanyId receiverId;
 
@@ -75,9 +75,9 @@ public class ProductionRequestView {
 
     Set<ProductionRequestStatusKind> statuses;
 
-    LocalDateTime startDueDate;
+    OffsetDateTime startDueDate;
 
-    LocalDateTime endDueDate;
+    OffsetDateTime endDueDate;
 
   }
 

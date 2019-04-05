@@ -1,7 +1,7 @@
 package pico.erp.production.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.Data;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
@@ -24,7 +24,7 @@ public class ProductionRequestData {
 
   BigDecimal spareQuantity;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
   boolean asap;
 
@@ -40,17 +40,17 @@ public class ProductionRequestData {
 
   UserId committerId;
 
-  LocalDateTime committedDate;
+  OffsetDateTime committedDate;
 
   UserId cancelerId;
 
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   UserId accepterId;
 
-  LocalDateTime acceptedDate;
+  OffsetDateTime acceptedDate;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
   CompanyId receiverId;
 

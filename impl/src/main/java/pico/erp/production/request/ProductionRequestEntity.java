@@ -3,7 +3,7 @@ package pico.erp.production.request;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -14,6 +14,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Index;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,9 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import pico.erp.company.CompanyId;
 import pico.erp.item.ItemId;
@@ -75,7 +75,7 @@ public class ProductionRequestEntity implements Serializable {
   @Column(precision = 19, scale = 2)
   BigDecimal spareQuantity;
 
-  LocalDateTime dueDate;
+  OffsetDateTime dueDate;
 
   boolean asap;
 
@@ -97,9 +97,8 @@ public class ProductionRequestEntity implements Serializable {
   @CreatedBy
   Auditor createdBy;
 
-  @CreatedDate
   @Column(updatable = false)
-  LocalDateTime createdDate;
+  OffsetDateTime createdDate;
 
   @Embedded
   @AttributeOverrides({
@@ -109,8 +108,7 @@ public class ProductionRequestEntity implements Serializable {
   @LastModifiedBy
   Auditor lastModifiedBy;
 
-  @LastModifiedDate
-  LocalDateTime lastModifiedDate;
+  OffsetDateTime lastModifiedDate;
 
   @Embedded
   @AttributeOverrides({
@@ -125,7 +123,7 @@ public class ProductionRequestEntity implements Serializable {
   UserId committerId;
 
   @Column
-  LocalDateTime committedDate;
+  OffsetDateTime committedDate;
 
   @Embedded
   @AttributeOverrides({
@@ -134,7 +132,7 @@ public class ProductionRequestEntity implements Serializable {
   UserId cancelerId;
 
   @Column
-  LocalDateTime canceledDate;
+  OffsetDateTime canceledDate;
 
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "PLAN_ID", length = TypeDefinitions.UUID_BINARY_LENGTH))
@@ -148,9 +146,9 @@ public class ProductionRequestEntity implements Serializable {
   UserId accepterId;
 
   @Column
-  LocalDateTime acceptedDate;
+  OffsetDateTime acceptedDate;
 
-  LocalDateTime completedDate;
+  OffsetDateTime completedDate;
 
   @AttributeOverrides({
     @AttributeOverride(name = "value", column = @Column(name = "RECEIVER_ID", length = TypeDefinitions.ID_LENGTH))
@@ -160,5 +158,16 @@ public class ProductionRequestEntity implements Serializable {
   @Column(length = TypeDefinitions.ENUM_LENGTH)
   @Enumerated(EnumType.STRING)
   UnitKind unit;
+
+  @PrePersist
+  private void onCreate() {
+    createdDate = OffsetDateTime.now();
+    lastModifiedDate = OffsetDateTime.now();
+  }
+
+  @PreUpdate
+  private void onUpdate() {
+    lastModifiedDate = OffsetDateTime.now();
+  }
 
 }

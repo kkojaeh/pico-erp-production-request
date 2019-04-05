@@ -1,6 +1,6 @@
 package pico.erp.production.request;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Repository;
@@ -23,6 +23,6 @@ public interface ProductionRequestRepository {
 
   void update(@NotNull ProductionRequest productionRequest);
 
-  long countCreatedBetween(LocalDateTime begin, LocalDateTime end);
+  long countCreatedBetween(OffsetDateTime begin, OffsetDateTime end);
 
 }
